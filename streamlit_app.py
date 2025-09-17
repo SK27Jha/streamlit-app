@@ -7,31 +7,31 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling: Soft pink + equal buttons
+# Styling: Night Blue + Sand Tan
 # -----------------------------
 st.markdown("""
 <style>
-    /* --- App background --- */
+    /* --- App background (Night Blue) --- */
     .stApp {
-        background-color: #F7CAC9;  /* Soft pink background */
-        color: #0f1724;
+        background-color: #2d545e;  /* Night Blue */
+        color: #FFFFFF;  /* White text for contrast */
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #DC143C;  /* Crimson */
+        background-color: #12343b;  /* Night Blue Shadow */
         padding: 14px 28px;
-        border-bottom: 2px solid #F75270;
+        border-bottom: 2px solid #c89666; /* Sand Tan Shadow */
         margin-bottom: 18px;
     }
     .header h1 {
         margin: 0;
-        color: #FFFFFF;
+        color: #e1b382;  /* Sand Tan */
     }
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #DC143C;  /* Crimson */
+        background-color: #12343b;  /* Night Blue Shadow */
         color: #FFFFFF;
         padding-top: 28px;
     }
@@ -39,34 +39,34 @@ st.markdown("""
     /* --- Navigation buttons --- */
     div[role="radiogroup"] label {
         display: block;
-        background: #FFFFFF;          
-        color: #0f1724 !important;
+        background: #e1b382;          /* Sand Tan */
+        color: #12343b !important;    /* Night Blue Shadow text */
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #F75270;
+        border: 1px solid #c89666;   /* Sand Tan Shadow */
         text-align: center;
-        width: 85% !important;   /* Equal width */
+        width: 85% !important;       /* Equal width */
     }
     div[role="radiogroup"] label:hover {
-        background: #F75270;
+        background: #c89666;          /* Sand Tan Shadow */
         color: #FFFFFF !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #DC143C !important;
-        color: #FFFFFF !important;
-        border: 2px solid #FFFFFF;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background: #12343b !important;   /* Night Blue Shadow active */
+        color: #e1b382 !important;        /* Sand Tan text */
+        border: 2px solid #e1b382;        /* Sand Tan border */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     /* --- Primary buttons --- */
     div.stButton > button {
-        background-color: #DC143C;
-        color: #FFFFFF;
+        background-color: #e1b382;   /* Sand Tan */
+        color: #12343b;              /* Night Blue Shadow text */
         border-radius: 8px;
         padding: 12px 20px;
         font-weight: 600;
@@ -74,22 +74,25 @@ st.markdown("""
         transition: background-color 0.2s, transform 0.2s;
         display: block;
         margin: 12px auto;   /* Center buttons */
-        width: 240px;        /* Equal button size */
+        width: 240px;
     }
     div.stButton > button:hover {
-        background-color: #F75270;
+        background-color: #c89666;   /* Sand Tan Shadow */
+        color: #FFFFFF;
         transform: translateY(-2px);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 1px solid #DC143C !important;
+        border: 1px solid #e1b382 !important;
+        background-color: #ffffff !important;
+        color: #12343b !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #DC143C;
+        color: #e1b382;  /* Sand Tan */
     }
 
     /* --- Card --- */
@@ -97,7 +100,7 @@ st.markdown("""
         background: #FFFFFF;
         border-radius: 10px;
         padding: 10px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -178,30 +181,34 @@ elif page == "About":
 
 elif page == "Feedback":
     st.markdown("## 📝 Feedback")
-    feedback = st.text_area("Your feedback")
-    rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, step=1)
 
-    if st.button("Send Feedback"):
-        if feedback:
-            feedback_data = {
-                "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
-                "Feedback": [feedback],
-                "Rating": [rating],
-            }
-            df_new = pd.DataFrame(feedback_data)
-            if os.path.exists("feedback.csv"):
-                df_existing = pd.read_csv("feedback.csv")
-                df = pd.concat([df_existing, df_new], ignore_index=True)
+    with st.form("feedback_form", clear_on_submit=True):
+        feedback = st.text_area("Your feedback")
+        rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, step=1)
+        submitted = st.form_submit_button("Send Feedback")
+
+        if submitted:
+            if feedback:
+                feedback_data = {
+                    "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+                    "Feedback": [feedback],
+                    "Rating": [rating],
+                }
+                df_new = pd.DataFrame(feedback_data)
+
+                if os.path.exists("feedback.csv"):
+                    df_existing = pd.read_csv("feedback.csv")
+                    df = pd.concat([df_existing, df_new], ignore_index=True)
+                else:
+                    df = df_new
+
+                df.to_csv("feedback.csv", index=False)
+                st.success("✅ Thank you! Feedback saved.")
             else:
-                df = df_new
-            df.to_csv("feedback.csv", index=False)
-            st.success("✅ Thank you! Feedback saved.")
-        else:
-            st.error("⚠️ Please enter feedback before submitting.")
+                st.error("⚠️ Please enter feedback before submitting.")
 
     if os.path.exists("feedback.csv"):
         st.markdown("---")
         st.subheader("📂 Previous Feedback")
         df = pd.read_csv("feedback.csv")
         st.dataframe(df)
-
