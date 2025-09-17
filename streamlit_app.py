@@ -11,17 +11,17 @@ st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 # -----------------------------
 st.markdown("""
 <style>
-    /* --- App background (Night Blue) --- */
+    /* --- App background --- */
     .stApp {
         background-color: #2d545e;  /* Night Blue */
-        color: #FFFFFF;  /* White text for contrast */
+        color: #ffffff;
     }
 
     /* --- Top header style --- */
     .header {
         background-color: #12343b;  /* Night Blue Shadow */
         padding: 14px 28px;
-        border-bottom: 2px solid #c89666; /* Sand Tan Shadow */
+        border-bottom: 2px solid #c89666;
         margin-bottom: 18px;
     }
     .header h1 {
@@ -32,7 +32,7 @@ st.markdown("""
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
         background-color: #12343b;  /* Night Blue Shadow */
-        color: #FFFFFF;
+        color: #e1b382;
         padding-top: 28px;
     }
 
@@ -40,45 +40,45 @@ st.markdown("""
     div[role="radiogroup"] label {
         display: block;
         background: #e1b382;          /* Sand Tan */
-        color: #12343b !important;    /* Night Blue Shadow text */
+        color: #12343b !important;
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #c89666;   /* Sand Tan Shadow */
+        border: 1px solid #c89666;
         text-align: center;
-        width: 85% !important;       /* Equal width */
+        width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
         background: #c89666;          /* Sand Tan Shadow */
-        color: #FFFFFF !important;
+        color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #12343b !important;   /* Night Blue Shadow active */
-        color: #e1b382 !important;        /* Sand Tan text */
-        border: 2px solid #e1b382;        /* Sand Tan border */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        background: #12343b !important;   /* Active Night Blue Shadow */
+        color: #e1b382 !important;        /* Active Sand Tan */
+        border: 2px solid #e1b382;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     /* --- Primary buttons --- */
     div.stButton > button {
         background-color: #e1b382;   /* Sand Tan */
-        color: #12343b;              /* Night Blue Shadow text */
+        color: #12343b;
         border-radius: 8px;
         padding: 12px 20px;
         font-weight: 600;
         border: none;
         transition: background-color 0.2s, transform 0.2s;
         display: block;
-        margin: 12px auto;   /* Center buttons */
+        margin: 12px auto;
         width: 240px;
     }
     div.stButton > button:hover {
-        background-color: #c89666;   /* Sand Tan Shadow */
-        color: #FFFFFF;
+        background-color: #c89666;
+        color: #ffffff;
         transform: translateY(-2px);
     }
 
@@ -92,15 +92,31 @@ st.markdown("""
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #e1b382;  /* Sand Tan */
+        color: #e1b382;
     }
 
     /* --- Card --- */
     .iframe-card {
-        background: #FFFFFF;
+        background: #ffffff;
         border-radius: 10px;
         padding: 10px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    /* --- Slider (Rating) --- */
+    .stSlider .st-bo, .stSlider .st-bp {   /* Track */
+        background: #e1b382 !important;    /* Sand Tan */
+    }
+    .stSlider .st-bq {   /* Filled track */
+        background: #c89666 !important;    /* Sand Tan Shadow */
+    }
+    .stSlider .st-bu {   /* Thumb (knob) */
+        background: #12343b !important;    /* Night Blue */
+        border: 2px solid #e1b382 !important;
+    }
+    .stSlider label, .stSlider span {
+        color: #e1b382 !important;
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
