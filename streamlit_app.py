@@ -4,140 +4,128 @@ import pandas as pd
 import os
 from datetime import datetime
 
-st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
+st.set_page_config(page_title="Global income inequality Dashboard", layout="wide")
 
 # -----------------------------
-# Styling: app colors + nav buttons
+# Styling: Using your new color palette
 # -----------------------------
-st.markdown(
-    """
-    <style>
-    /* --- App background & text --- */
+st.markdown("""
+<style>
+    /* --- App background & overall text color --- */
     .stApp {
-        background: linear-gradient(180deg, #f7f9fc 0%, #eef3f8 100%);
+        background-color: #FDEBD0;  /* cream lightest background */
         color: #0f1724;
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #ffffff;
+        background-color: #DC143C;  /* primary accent */
         padding: 14px 28px;
-        border-bottom: 1px solid rgba(16,24,40,0.06);
-        box-shadow: 0 1px 0 rgba(16,24,40,0.02);
+        border-bottom: 2px solid #F75270;
         margin-bottom: 18px;
     }
     .header h1 {
         margin: 0;
-        color: #0f1724;
+        color: #FFFFFF;
     }
 
     /* --- Sidebar container --- */
     section[data-testid="stSidebar"] {
-        background: #0f1724;            /* deep navy */
-        color: #ffffff;
+        background-color: #DC143C;  /* primary accent */
+        color: #FFFFFF;
         padding-top: 28px;
     }
 
-    /* Sidebar title */
+    /* Sidebar title text color */
     section[data-testid="stSidebar"] .css-1d391kg,
     section[data-testid="stSidebar"] .css-1fv8s86 {
-        color: #ffffff !important;
+        color: #FFFFFF !important;
     }
 
-    /* --- Radio / nav options: make them look like buttons --- */
+    /* --- Navigation radio buttons styling --- */
     div[role="radiogroup"] label,
     label[data-baseweb="radio"] {
         display: block;
-        background: #142634;           /* default button bg */
-        color: #cbd5e1 !important;     /* muted text */
+        background: #F7CAC9;           /* soft pink default */
+        color: #0f1724 !important;     /* dark text for contrast */
         padding: 10px 14px;
         border-radius: 10px;
         margin: 6px 12px;
         font-weight: 600;
         cursor: pointer;
-        transition: transform 0.12s ease, background 0.12s ease;
-        box-shadow: none;
-        border: 1px solid rgba(255,255,255,0.04);
+        transition: background 0.3s, transform 0.2s;
+        border: 1px solid #F75270;     /* border with secondary highlight */
     }
 
-    /* Hover state */
+    /* Hover state for nav buttons */
     div[role="radiogroup"] label:hover,
     label[data-baseweb="radio"]:hover {
+        background: #F75270;
+        color: #FFFFFF !important;
         transform: translateY(-2px);
-        background: #163447;
-        color: #ffffff !important;
     }
 
-    /* Selected state — multiple fallbacks for selectors */
+    /* Selected nav button state */
     label[data-checked="true"],
     div[role="radiogroup"] label[aria-checked="true"],
-    label[data-baseweb="radio"]:has(input:checked)
-    {
-        background: linear-gradient(90deg,#0073e6,#005bb5) !important;
-        color: #ffffff !important;
-        box-shadow: 0 6px 18px rgba(3,102,214,0.18);
-        border: 1px solid rgba(0,82,180,0.9);
+    label[data-baseweb="radio"]:has(input:checked) {
+        background: #DC143C !important;
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    /* Ensure radio dot remains visible */
-    div[role="radiogroup"] input[type="radio"] {
-        accent-color: #ffffff;
-    }
-
-    /* --- Primary buttons in app --- */
+    /* Primary buttons in app */
     div.stButton > button {
-        background: linear-gradient(90deg,#0073e6,#005bb5);
-        color: #fff;
-        padding: 8px 16px;
+        background-color: #DC143C;
+        color: #FFFFFF;
         border-radius: 8px;
-        border: none;
+        padding: 8px 16px;
         font-weight: 600;
+        border: none;
+        transition: background-color 0.2s, transform 0.2s;
     }
+
     div.stButton > button:hover {
-        filter: brightness(0.95);
+        background-color: #F75270;
         transform: translateY(-2px);
     }
 
-    /* Text area / inputs visual */
+    /* Inputs, text areas etc */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
+        border: 1px solid #DC143C !important;
     }
 
-    /* Page headings color */
+    /* Headings color */
     h1, h2, h3 {
-        color: #0f1724;
+        color: #DC143C;
     }
 
-    /* Make the iframe area look card-like */
+    /* Card styling for iframe or content area */
     .iframe-card {
-        background: white;
+        background: #FFFFFF;
         border-radius: 10px;
-        padding: 8px;
-        box-shadow: 0 6px 18px rgba(3,102,214,0.06);
+        padding: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+</style>
+""", unsafe_allow_html=True)
 
 # -----------------------------
-# Sidebar Nav (streamlit radio)
+# Sidebar Nav
 # -----------------------------
 st.sidebar.title("Navigation")
-# Using st.radio (styled above)
 page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
 
 # -----------------------------
 # Header (top area)
 # -----------------------------
-st.markdown(
-    """
-    <div class="header">
-      <h1>🌍 &nbsp; Global Balance</h1>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("""
+<div class="header">
+  <h1>🌍 &nbsp; Global Balance</h1>
+</div>
+""", unsafe_allow_html=True)
 
 # -----------------------------
 # Pages
@@ -155,20 +143,16 @@ if page == "Login":
 elif page == "Dashboard":
     st.markdown("## 📊 Dashboard")
     st.markdown('<div class="iframe-card">', unsafe_allow_html=True)
-    st.markdown(
-        """
+    st.markdown("""
         <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
         src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9"
         frameborder="0" allowFullScreen="true"></iframe>
-        """,
-        unsafe_allow_html=True,
-    )
+    """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 elif page == "Insight":
     st.markdown("## 🔎 Insights from Dashboard")
-    st.markdown(
-        """
+    st.markdown("""
         ### 📌 Key Findings
 
         - **Gini Index**
@@ -194,25 +178,21 @@ elif page == "Insight":
 
         ---
         ✅ These insights help in identifying **global inequality trends** and provide a base for further policy decisions.
-        """
-    )
+    """, unsafe_allow_html=True)
 
 elif page == "About":
     st.markdown("## ℹ️ About This Project")
-    st.markdown(
-        """
-        ### 🌍 Global Balance – Income Inequality Dashboard  
+    st.markdown("""
+        **Global Balance – Income Inequality Dashboard**  
 
-        This project analyzes and visualizes global income inequality using interactive dashboards and highlights:
+        An interactive platform built to visualize and analyze global income inequality. Highlights include:
 
-        - **Gini Index** — inequality metric.
-        - **Average & Distribution of Income** across income groups.
-        - **Top 10% vs Bottom 10% Share** — wealth concentration measure.
-        - **Population vs Income Trends** across 2000–2023.
+        - **Gini Index**, **income distribution**, **top & bottom income shares**, and **population trends**.
+        - Data from 2000-2023 to capture long-term trends.
+        - Designed for policymakers, researchers, and anyone interested in global economic equity.
 
-        **Tools:** Power BI (visuals) + Streamlit & Python (Pandas, Matplotlib/Plotly) for web integration.
-        """
-    )
+        Built using Power BI + Streamlit & Python (Pandas, etc).
+    """, unsafe_allow_html=True)
 
 elif page == "Feedback":
     st.markdown("## 📝 Feedback")
@@ -232,7 +212,7 @@ elif page == "Feedback":
             else:
                 df = df_new
             df.to_csv("feedback.csv", index=False)
-            st.success("✅ Thank you! Your feedback has been saved.")
+            st.success("✅ Thank you! Feedback saved.")
         else:
             st.error("⚠️ Please enter feedback before submitting.")
     if os.path.exists("feedback.csv"):
@@ -240,3 +220,4 @@ elif page == "Feedback":
         st.subheader("📂 Previous Feedback")
         df = pd.read_csv("feedback.csv")
         st.dataframe(df)
+
