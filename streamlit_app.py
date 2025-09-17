@@ -7,66 +7,66 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling: Night Blue + Sand Tan
+# Styling: Yellow / Pink / Orange / White
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #2d545e;  /* Night Blue */
-        color: #ffffff;
+        background-color: #ffde22;  /* Yellow background */
+        color: #000000;
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #12343b;  /* Night Blue Shadow */
+        background-color: #ff414e;  /* Pink / Red Circle */
         padding: 14px 28px;
-        border-bottom: 2px solid #c89666;
+        border-bottom: 2px solid #ff8928;
         margin-bottom: 18px;
     }
     .header h1 {
         margin: 0;
-        color: #e1b382;  /* Sand Tan */
+        color: #ffffff;  /* White Layover */
     }
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #12343b;  /* Night Blue Shadow */
-        color: #e1b382;
+        background-color: #ff414e;  /* Pink / Red */
+        color: #ffffff;
         padding-top: 28px;
     }
 
     /* --- Navigation buttons --- */
     div[role="radiogroup"] label {
         display: block;
-        background: #e1b382;          /* Sand Tan */
-        color: #12343b !important;
+        background: #ffffff;          /* White */
+        color: #ff414e !important;    /* Pink/Red text */
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #c89666;
+        border: 1px solid #ff8928;    /* Orange border */
         text-align: center;
         width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
-        background: #c89666;          /* Sand Tan Shadow */
+        background: #ff8928;          /* Orange hover */
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #12343b !important;   /* Active Night Blue Shadow */
-        color: #e1b382 !important;        /* Active Sand Tan */
-        border: 2px solid #e1b382;
+        background: #ff414e !important;   /* Active Pink */
+        color: #ffffff !important;
+        border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     /* --- Primary buttons --- */
     div.stButton > button {
-        background-color: #e1b382;   /* Sand Tan */
-        color: #12343b;
+        background-color: #ff414e;   /* Pink/Red */
+        color: #ffffff;
         border-radius: 8px;
         padding: 12px 20px;
         font-weight: 600;
@@ -77,22 +77,21 @@ st.markdown("""
         width: 240px;
     }
     div.stButton > button:hover {
-        background-color: #c89666;
-        color: #ffffff;
+        background-color: #ff8928;   /* Orange */
         transform: translateY(-2px);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 1px solid #e1b382 !important;
+        border: 1px solid #ff414e !important;
         background-color: #ffffff !important;
-        color: #12343b !important;
+        color: #000000 !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #e1b382;
+        color: #ff414e;
     }
 
     /* --- Card --- */
@@ -101,22 +100,6 @@ st.markdown("""
         border-radius: 10px;
         padding: 10px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
-
-    /* --- Slider (Rating) --- */
-    .stSlider .st-bo, .stSlider .st-bp {   /* Track */
-        background: #e1b382 !important;    /* Sand Tan */
-    }
-    .stSlider .st-bq {   /* Filled track */
-        background: #c89666 !important;    /* Sand Tan Shadow */
-    }
-    .stSlider .st-bu {   /* Thumb (knob) */
-        background: #12343b !important;    /* Night Blue */
-        border: 2px solid #e1b382 !important;
-    }
-    .stSlider label, .stSlider span {
-        color: #e1b382 !important;
-        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -198,6 +181,7 @@ elif page == "About":
 elif page == "Feedback":
     st.markdown("## 📝 Feedback")
 
+    # --- Use form so slider works ---
     with st.form("feedback_form", clear_on_submit=True):
         feedback = st.text_area("Your feedback")
         rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, step=1)
@@ -223,6 +207,7 @@ elif page == "Feedback":
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
 
+    # --- Show previous feedback ---
     if os.path.exists("feedback.csv"):
         st.markdown("---")
         st.subheader("📂 Previous Feedback")
