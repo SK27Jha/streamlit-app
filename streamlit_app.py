@@ -9,24 +9,43 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Custom Background Styling
+# Custom Styling (Theme + Nav Buttons)
 # -----------------------------
 page_bg_css = """
 <style>
-    /* Background color */
+    /* App background */
     .stApp {
-        background-color: #f0f4f7; /* light grey-blue */
-        color: #000000;
+        background-color: #f9fafc; /* light background */
+        color: #222222; /* dark text */
     }
 
     /* Sidebar background */
     section[data-testid="stSidebar"] {
-        background-color: #1e3d59; /* dark navy */
+        background-color: #1a2b48; /* dark navy */
     }
 
-    /* Sidebar text */
-    section[data-testid="stSidebar"] * {
-        color: #ffffff !important;
+    /* Sidebar radio buttons (navigation) */
+    div[role="radiogroup"] label {
+        background-color: #2c3e5b;
+        color: white !important;
+        padding: 8px 16px;
+        border-radius: 6px;
+        margin-bottom: 6px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* Highlight selected navigation button */
+    div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
+        background-color: #0073e6 !important;
+        color: white !important;
+        font-weight: bold;
+        border: 1px solid #005bb5;
+    }
+
+    /* Sidebar title */
+    section[data-testid="stSidebar"] h1, section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
+        color: white !important;
     }
 
     /* Buttons */
@@ -36,11 +55,17 @@ page_bg_css = """
         border-radius: 8px;
         padding: 0.6em 1.2em;
         font-weight: bold;
+        border: none;
     }
 
     div.stButton > button:hover {
         background-color: #005bb5;
         color: white;
+    }
+
+    /* Headings */
+    h1, h2, h3 {
+        color: #1a2b48;
     }
 </style>
 """
@@ -186,4 +211,3 @@ elif page == "Feedback":
         st.subheader("📂 Previous Feedback")
         df = pd.read_csv("feedback.csv")
         st.dataframe(df)
-
