@@ -3,137 +3,187 @@ import pandas as pd
 import os
 from datetime import datetime
 
-# File to store feedback
-FEEDBACK_FILE = "feedback_responses.csv"
+# -----------------------------
+# Page Configuration
+# -----------------------------
+st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
-# --- Custom CSS ---
-st.markdown("""
-    <style>
-    [data-testid="stSidebar"] {
-        background-color: #1E1E2E;
-        padding: 20px;
+# -----------------------------
+# Custom Background Styling
+# -----------------------------
+page_bg_css = """
+<style>
+    /* Background color */
+    .stApp {
+        background-color: #f0f4f7; /* light grey-blue */
+        color: #000000;
     }
-    [data-testid="stSidebar"] h2 {
-        color: #ffffff;
-        font-size: 22px;
-        text-align: center;
-        margin-bottom: 20px;
+
+    /* Sidebar background */
+    section[data-testid="stSidebar"] {
+        background-color: #1e3d59; /* dark navy */
     }
-    .css-1kyxreq div {
+
+    /* Sidebar text */
+    section[data-testid="stSidebar"] * {
         color: #ffffff !important;
-        font-size: 18px !important;
-        padding: 10px;
     }
-    div[data-testid="stSidebarNav"] button[aria-selected="true"] {
-        background-color: #007BFF !important;
-        border-radius: 10px;
-        color: white !important;
-    }
-    .logout-btn {
-        position: absolute;
-        top: 15px;
-        right: 25px;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
+    /* Buttons */
+    div.stButton > button {
+        background-color: #0073e6;
+        color: white;
+        border-radius: 8px;
+        padding: 0.6em 1.2em;
+        font-weight: bold;
+    }
 
-# --- Sidebar Navigation ---
+    div.stButton > button:hover {
+        background-color: #005bb5;
+        color: white;
+    }
+</style>
+"""
+st.markdown(page_bg_css, unsafe_allow_html=True)
+
+# -----------------------------
+# Sidebar Navigation
+# -----------------------------
 st.sidebar.title("Navigation")
-menu = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
+page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
 
-
-# --- Top Section with Logout ---
-col1, col2 = st.columns([8, 2])
-with col1:
-    st.title("🌍 Global Balance")
-with col2:
-    st.markdown('<div class="logout-btn">', unsafe_allow_html=True)
-    if st.button("Logout"):
-        st.warning("🔒 You have logged out successfully.")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-
-# --- Pages ---
-if menu == "Login":
+# -----------------------------
+# Login Page
+# -----------------------------
+if page == "Login":
+    st.markdown("<h1 style='text-align: center;'>🌍 Global Balance</h1>", unsafe_allow_html=True)
     st.subheader("🔑 Login Page")
-    st.text_input("Enter Username")
-    st.text_input("Enter Password", type="password")
-    st.button("Login")
 
-elif menu == "Dashboard":
-    st.subheader("📊 Dashboard")
-    st.markdown("""
-        <iframe title="Global Income Inequality Dahboard" 
-        width="100%" height="500" 
+    username = st.text_input("Enter Username")
+    password = st.text_input("Enter Password", type="password")
+
+    if st.button("Login", use_container_width=True):
+        if username == "admin" and password == "1234":
+            st.success("✅ Login Successful!")
+        else:
+            st.error("❌ Invalid Username or Password")
+
+# -----------------------------
+# Dashboard Page (Power BI iframe)
+# -----------------------------
+elif page == "Dashboard":
+    st.markdown("## 📊 Dashboard")
+    st.markdown(
+        """
+        <iframe title="Global Income Inequality Dashboard" width="100%" height="600" 
         src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9" 
         frameborder="0" allowFullScreen="true"></iframe>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
-elif menu == "Insight":
-    st.subheader("📖 Insights from Dashboard")
+# -----------------------------
+# Insight Page
+# -----------------------------
+elif page == "Insight":
+    st.subheader("🔎 Insights from Dashboard")
 
-    st.write("""
-    ✅ **Key Takeaways**  
-    - **Global Coverage**: Data spans **15 countries** with diverse income groups.  
-    - **Inequality Snapshot**:  
-        • Avg. Gini Index = **0.43**  
-        • Max = **0.65**, Min = **0.20**  
-    - **Income Distribution**:  
-        • Avg. Income ≈ **35.43K USD**  
-        • Population covered ≈ **172.23M**  
-    - **Income Groups**:  
-        • High Income: 28.9%  
-        • Upper Middle: 24.2%  
-        • Low Income: 23.6%  
-        • Lower Middle: 23.3%  
-    - **Top Performers**:  
-        • Highest Avg. Income → **Saudi Arabia, Germany, Canada, US**  
-        • Biggest inequality gap → **China, Mexico, India** (Top 10% share vs Bottom 10%).  
-    - **Trends Over Time (2000–2023)**:  
-        • Inequality fluctuates but general upward income growth trend.  
-        • High-income countries show steadier Gini indexes, while middle/low-income fluctuate more.  
+    st.markdown("""
+    ### 📌 Key Findings
+
+    - **Gini Index**
+      - Average Gini Index across countries is around **0.43**.
+      - Ranges from **0.20 (low inequality)** to **0.65 (high inequality)**.
+    
+    - **Income Distribution**
+      - High Income group countries dominate with ~29%.
+      - Upper Middle, Lower Middle, and Low Income countries share the rest almost equally.
+    
+    - **Top vs Bottom 10%**
+      - The top 10% income share averages **40.20%**.
+      - The bottom 10% income share averages only **2.99%**.
+      - This highlights a **huge inequality gap**.
+    
+    - **Country-Level Observations**
+      - Saudi Arabia, Germany, and Canada report high average incomes.
+      - Countries like India, Mexico, and Nigeria show **higher inequality levels**.
+
+    - **Trends Over Time (2000–2023)**
+      - Fluctuations in Gini Index, but overall inequality persists.
+      - Income growth is seen in high-income countries compared to low-income nations.
+
+    ---
+    ✅ These insights help in identifying **global inequality trends** and provide a base for further policy decisions.
     """)
 
-    st.info("📌 These insights are auto-generated from your dashboard visuals.")
+# -----------------------------
+# About Page
+# -----------------------------
+elif page == "About":
+    st.subheader("ℹ️ About This Project")
 
-elif menu == "About":
-    st.subheader("ℹ️ About")
-    st.write("""
-    This dashboard is built to analyze **global income inequality trends**.  
-    Features include:
-    - Gini index monitoring  
-    - Population vs income distribution  
-    - Country & income group analysis  
-    - Interactive Power BI reports  
+    st.markdown("""
+    ### 🌍 Global Balance – Income Inequality Dashboard  
+
+    This project is designed to **analyze and visualize global income inequality** using interactive dashboards.  
+    It brings together multiple metrics such as:  
+
+    - **Gini Index** → Measures inequality in income distribution.  
+    - **Average & Distribution of Income** → Across different income groups.  
+    - **Top 10% vs Bottom 10% Share** → Identifies concentration of wealth.  
+    - **Population vs Income Trends** → How demographics impact inequality.  
+
+    ### 🎯 Objective
+    - Provide policymakers, researchers, and analysts with clear insights into global inequality.  
+    - Track **changes over time (2000–2023)** to identify trends.  
+    - Highlight **country-level differences** between high, middle, and low-income groups.  
+
+    ### 🛠️ Tools Used
+    - **Power BI** → For dashboard design & visuals.  
+    - **Streamlit & Python (Pandas, Matplotlib/Plotly)** → For web app integration.  
+
+    ---
+    ✅ *This platform aims to make global inequality data more **transparent, interactive, and actionable.***
     """)
 
-elif menu == "Feedback":
-    st.subheader("💬 Feedback")
+# -----------------------------
+# Feedback Page (with CSV Save)
+# -----------------------------
+elif page == "Feedback":
+    st.subheader("📝 Feedback")
 
-    # Feedback Form
     feedback = st.text_area("Your feedback")
-    rating = st.slider("Rate the dashboard (1 = Poor, 5 = Excellent)", 1, 5, 3)
+    rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5)
 
     if st.button("Send Feedback"):
-        # Save feedback to CSV
-        new_feedback = {
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "feedback": feedback,
-            "rating": rating
-        }
+        if feedback:
+            # Save feedback into CSV
+            feedback_data = {
+                "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+                "Feedback": [feedback],
+                "Rating": [rating]
+            }
 
-        if os.path.exists(FEEDBACK_FILE):
-            df = pd.read_csv(FEEDBACK_FILE)
-            df = pd.concat([df, pd.DataFrame([new_feedback])], ignore_index=True)
+            df_new = pd.DataFrame(feedback_data)
+
+            if os.path.exists("feedback.csv"):
+                df_existing = pd.read_csv("feedback.csv")
+                df = pd.concat([df_existing, df_new], ignore_index=True)
+            else:
+                df = df_new
+
+            df.to_csv("feedback.csv", index=False)
+
+            st.success("✅ Thank you for your feedback! It has been recorded.")
+            st.write("**Your Feedback:**", feedback)
+            st.write("**Your Rating:**", rating, "⭐")
         else:
-            df = pd.DataFrame([new_feedback])
+            st.error("⚠️ Please enter feedback before submitting.")
 
-        df.to_csv(FEEDBACK_FILE, index=False)
-        st.success("✅ Thank you! Your feedback has been recorded.")
+    # Show previous feedback if available
+    if os.path.exists("feedback.csv"):
+        st.markdown("---")
+        st.subheader("📂 Previous Feedback")
+        df = pd.read_csv("feedback.csv")
+        st.dataframe(df)
 
-    # Show Past Feedback
-    if os.path.exists(FEEDBACK_FILE):
-        st.markdown("### 📌 Recent Feedback")
-        df = pd.read_csv(FEEDBACK_FILE)
-        st.dataframe(df.tail(5))  # Show last 5 feedbacks
