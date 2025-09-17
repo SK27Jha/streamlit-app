@@ -4,10 +4,10 @@ import pandas as pd
 import os
 from datetime import datetime
 
-st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
+st.set_page_config(page_title="Global income inequality dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Light Green + Navy Blue Nav + Pink/Orange Highlights)
+# Styling (Light Green + Light Blue Nav + Pink/Orange Highlights)
 # -----------------------------
 st.markdown("""
 <style>
@@ -36,28 +36,28 @@ st.markdown("""
         padding-top: 28px;
     }
 
-    /* --- Navigation buttons (Navy Blue style) --- */
+    /* --- Navigation buttons (Light Blue style) --- */
     div[role="radiogroup"] label {
         display: block;
-        background: #001f3f;        /* Navy Blue */
-        color: #ffffff !important;
+        background: #add8e6;        /* Light Blue */
+        color: #12343b !important;
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #12343b;
+        border: 1px solid #87ceeb;
         text-align: center;
         width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
-        background: #004080;        /* Brighter Navy Blue */
+        background: #87ceeb;        /* Sky Blue hover */
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #ff8928 !important;   /* Orange when active */
+        background: #4682b4 !important;   /* Steel Blue when active */
         color: #ffffff !important;
         border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -113,7 +113,7 @@ page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Fee
 # -----------------------------
 st.markdown("""
 <div class="header">
-  <h1>🌍 &nbsp; Global Balance</h1>
+  <h1>🌍 &nbsp;Global Income Inequality Dashboard</h1>
 </div>
 """, unsafe_allow_html=True)
 
