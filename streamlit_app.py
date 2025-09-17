@@ -7,92 +7,89 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling: Pink background, Orange + White accents
+# Styling (Yellow, Pink/Red, Orange, White + Light Blue Nav)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #ff414e;  /* Pink/Red background */
-        color: #ffffff;             /* White text */
+        background-color: #ffde22;  /* Yellow Background */
+        color: #12343b;
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #ff8928;  /* Orange bar */
+        background-color: #ff414e;  /* Pink/Red */
         padding: 14px 28px;
-        border-bottom: 2px solid #ffffff;
+        border-bottom: 2px solid #ff8928;
         margin-bottom: 18px;
     }
     .header h1 {
         margin: 0;
-        color: #ffffff;  /* White text */
+        color: #ffffff;  /* White */
     }
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #ffffff;  /* White sidebar */
-        color: #000000;
+        background-color: #ff414e;  /* Pink/Red */
+        color: #ffffff;
         padding-top: 28px;
     }
 
-    /* --- Navigation buttons --- */
+    /* --- Navigation buttons (Light Blue style) --- */
     div[role="radiogroup"] label {
         display: block;
-        background: #ff414e;          /* Pink */
-        color: #ffffff !important;
+        background: #add8e6;        /* Light Blue */
+        color: #12343b !important;
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #ff8928;    /* Orange border */
+        border: 1px solid #2d545e;
         text-align: center;
         width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
-        background: #ff8928;          /* Orange hover */
+        background: #87ceeb;        /* Sky Blue */
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #ffffff !important;   /* Active = white */
-        color: #ff414e !important;        /* Pink text */
-        border: 2px solid #ff8928;
+        background: #2d545e !important;   /* Night Blue when active */
+        color: #ffffff !important;
+        border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     /* --- Primary buttons --- */
     div.stButton > button {
-        background-color: #ffffff;   /* White button */
-        color: #ff414e;              /* Pink text */
+        background-color: #ff414e;
+        color: #ffffff;
         border-radius: 8px;
         padding: 12px 20px;
         font-weight: 600;
-        border: 2px solid #ff8928;
+        border: none;
         transition: background-color 0.2s, transform 0.2s;
         display: block;
         margin: 12px auto;
         width: 240px;
     }
     div.stButton > button:hover {
-        background-color: #ff8928;   /* Orange hover */
-        color: #ffffff;
+        background-color: #ff8928;
         transform: translateY(-2px);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 1px solid #ffffff !important;
-        background-color: #ffffff !important;
-        color: #000000 !important;
+        border: 1px solid #ff414e !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #ffffff;  /* White headings */
+        color: #ff414e;
     }
 
     /* --- Card --- */
@@ -182,26 +179,32 @@ elif page == "About":
 elif page == "Feedback":
     st.markdown("## 📝 Feedback")
 
-    # --- Fix: Form with star rating ---
+    # --- Persistent rating state ---
+    if "rating" not in st.session_state:
+        st.session_state.rating = 0
+
+    def set_rating(value):
+        st.session_state.rating = value
+
     with st.form("feedback_form", clear_on_submit=True):
         feedback = st.text_area("Your feedback")
 
         st.markdown("### ⭐ Rate this Dashboard")
-        # Star rating buttons
         cols = st.columns(5)
-        rating = 0
         for i, col in enumerate(cols, start=1):
             if col.button("⭐ " * i, key=f"star_{i}"):
-                rating = i
+                set_rating(i)
+
+        st.write(f"Selected Rating: {st.session_state.rating} ⭐")
 
         submitted = st.form_submit_button("Send Feedback")
 
         if submitted:
-            if feedback.strip() and rating > 0:
+            if feedback.strip() and st.session_state.rating > 0:
                 feedback_data = {
                     "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
                     "Feedback": [feedback],
-                    "Rating": [rating],
+                    "Rating": [st.session_state.rating],
                 }
                 df_new = pd.DataFrame(feedback_data)
 
@@ -212,7 +215,7 @@ elif page == "Feedback":
                     df = df_new
 
                 df.to_csv("feedback.csv", index=False)
-                st.success(f"✅ Thank you! Feedback saved with rating {rating} ⭐")
+                st.success(f"✅ Thank you! Feedback saved with rating {st.session_state.rating} ⭐")
             else:
                 st.error("⚠️ Please enter feedback and select a rating.")
 
