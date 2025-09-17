@@ -7,13 +7,13 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Yellow, Pink/Red, Orange, White + Light Blue Nav)
+# Styling (Light Green + Navy Blue Nav + Pink/Orange Highlights)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #ffde22;  /* Yellow Background */
+        background-color: #90ee90;  /* Light Green Background */
         color: #12343b;
     }
 
@@ -36,28 +36,28 @@ st.markdown("""
         padding-top: 28px;
     }
 
-    /* --- Navigation buttons (Light Blue style) --- */
+    /* --- Navigation buttons (Navy Blue style) --- */
     div[role="radiogroup"] label {
         display: block;
-        background: #add8e6;        /* Light Blue */
-        color: #12343b !important;
+        background: #001f3f;        /* Navy Blue */
+        color: #ffffff !important;
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #2d545e;
+        border: 1px solid #12343b;
         text-align: center;
         width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
-        background: #87ceeb;        /* Sky Blue */
+        background: #004080;        /* Brighter Navy Blue */
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #2d545e !important;   /* Night Blue when active */
+        background: #ff8928 !important;   /* Orange when active */
         color: #ffffff !important;
         border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -179,32 +179,18 @@ elif page == "About":
 elif page == "Feedback":
     st.markdown("## 📝 Feedback")
 
-    # --- Persistent rating state ---
-    if "rating" not in st.session_state:
-        st.session_state.rating = 0
-
-    def set_rating(value):
-        st.session_state.rating = value
-
     with st.form("feedback_form", clear_on_submit=True):
         feedback = st.text_area("Your feedback")
-
-        st.markdown("### ⭐ Rate this Dashboard")
-        cols = st.columns(5)
-        for i, col in enumerate(cols, start=1):
-            if col.button("⭐ " * i, key=f"star_{i}"):
-                set_rating(i)
-
-        st.write(f"Selected Rating: {st.session_state.rating} ⭐")
+        rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, 3)
 
         submitted = st.form_submit_button("Send Feedback")
 
         if submitted:
-            if feedback.strip() and st.session_state.rating > 0:
+            if feedback.strip():
                 feedback_data = {
                     "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
                     "Feedback": [feedback],
-                    "Rating": [st.session_state.rating],
+                    "Rating": [rating],
                 }
                 df_new = pd.DataFrame(feedback_data)
 
@@ -215,9 +201,9 @@ elif page == "Feedback":
                     df = df_new
 
                 df.to_csv("feedback.csv", index=False)
-                st.success(f"✅ Thank you! Feedback saved with rating {st.session_state.rating} ⭐")
+                st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
             else:
-                st.error("⚠️ Please enter feedback and select a rating.")
+                st.error("⚠️ Please enter feedback before submitting.")
 
     # --- Show previous feedback ---
     if os.path.exists("feedback.csv"):
