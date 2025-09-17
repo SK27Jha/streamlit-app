@@ -7,19 +7,19 @@ from datetime import datetime
 st.set_page_config(page_title="Global income inequality Dashboard", layout="wide")
 
 # -----------------------------
-# Styling: Using your new color palette
+# Styling: Cream background + button layout
 # -----------------------------
 st.markdown("""
 <style>
-    /* --- App background & overall text color --- */
+    /* --- App background --- */
     .stApp {
-        background-color: #FDEBD0;  /* cream lightest background */
+        background-color: #FDEBD0;  /* Cream background */
         color: #0f1724;
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #DC143C;  /* primary accent */
+        background-color: #DC143C;  /* Crimson */
         padding: 14px 28px;
         border-bottom: 2px solid #F75270;
         margin-bottom: 18px;
@@ -29,80 +29,73 @@ st.markdown("""
         color: #FFFFFF;
     }
 
-    /* --- Sidebar container --- */
+    /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #DC143C;  /* primary accent */
+        background-color: #DC143C;  /* Crimson */
         color: #FFFFFF;
         padding-top: 28px;
     }
-
-    /* Sidebar title text color */
     section[data-testid="stSidebar"] .css-1d391kg,
     section[data-testid="stSidebar"] .css-1fv8s86 {
         color: #FFFFFF !important;
     }
 
-    /* --- Navigation radio buttons styling --- */
-    div[role="radiogroup"] label,
-    label[data-baseweb="radio"] {
+    /* --- Navigation buttons --- */
+    div[role="radiogroup"] label {
         display: block;
-        background: #F7CAC9;           /* soft pink default */
-        color: #0f1724 !important;     /* dark text for contrast */
+        background: #F7CAC9;          /* Soft pink default */
+        color: #0f1724 !important;
         padding: 10px 14px;
         border-radius: 10px;
         margin: 6px 12px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #F75270;     /* border with secondary highlight */
+        border: 1px solid #F75270;
+        text-align: center;
     }
-
-    /* Hover state for nav buttons */
-    div[role="radiogroup"] label:hover,
-    label[data-baseweb="radio"]:hover {
+    div[role="radiogroup"] label:hover {
         background: #F75270;
         color: #FFFFFF !important;
         transform: translateY(-2px);
     }
-
-    /* Selected nav button state */
-    label[data-checked="true"],
-    div[role="radiogroup"] label[aria-checked="true"],
-    label[data-baseweb="radio"]:has(input:checked) {
+    div[role="radiogroup"] label[aria-checked="true"] {
         background: #DC143C !important;
         color: #FFFFFF !important;
         border: 2px solid #FFFFFF;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    /* Primary buttons in app */
+    /* --- Primary buttons --- */
     div.stButton > button {
         background-color: #DC143C;
         color: #FFFFFF;
         border-radius: 8px;
-        padding: 8px 16px;
+        padding: 12px 20px;
         font-weight: 600;
         border: none;
         transition: background-color 0.2s, transform 0.2s;
+        display: block;
+        margin: 12px auto;   /* Center buttons */
+        width: 220px;        /* Fixed width for consistency */
     }
-
     div.stButton > button:hover {
         background-color: #F75270;
         transform: translateY(-2px);
     }
 
-    /* Inputs, text areas etc */
+    /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
         border: 1px solid #DC143C !important;
     }
 
-    /* Headings color */
+    /* --- Headings --- */
     h1, h2, h3 {
         color: #DC143C;
     }
 
-    /* Card styling for iframe or content area */
+    /* --- Card --- */
     .iframe-card {
         background: #FFFFFF;
         border-radius: 10px;
@@ -119,11 +112,11 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
 
 # -----------------------------
-# Header (top area)
+# Header
 # -----------------------------
 st.markdown("""
 <div class="header">
-  <h1>🌍 &nbsp; Global Balance</h1>
+  <h1>🌍 &nbsp;Global income income inequality</h1>
 </div>
 """, unsafe_allow_html=True)
 
@@ -134,7 +127,7 @@ if page == "Login":
     st.markdown("## 🔑 Login Page")
     username = st.text_input("Enter Username")
     password = st.text_input("Enter Password", type="password")
-    if st.button("Login", use_container_width=False):
+    if st.button("Login"):
         if username == "admin" and password == "1234":
             st.success("✅ Login Successful!")
         else:
@@ -152,47 +145,11 @@ elif page == "Dashboard":
 
 elif page == "Insight":
     st.markdown("## 🔎 Insights from Dashboard")
-    st.markdown("""
-        ### 📌 Key Findings
-
-        - **Gini Index**
-          - Average Gini Index across countries is around **0.43**.
-          - Ranges from **0.20 (low inequality)** to **0.65 (high inequality)**.
-        
-        - **Income Distribution**
-          - High Income group countries dominate with ~29%.
-          - Upper Middle, Lower Middle, and Low Income countries share the rest almost equally.
-        
-        - **Top vs Bottom 10%**
-          - The top 10% income share averages **40.20%**.
-          - The bottom 10% income share averages only **2.99%**.
-          - This highlights a **huge inequality gap**.
-        
-        - **Country-Level Observations**
-          - Saudi Arabia, Germany, and Canada report high average incomes.
-          - Countries like India, Mexico, and Nigeria show **higher inequality levels**.
-
-        - **Trends Over Time (2000–2023)**
-          - Fluctuations in Gini Index, but overall inequality persists.
-          - Income growth is seen in high-income countries compared to low-income nations.
-
-        ---
-        ✅ These insights help in identifying **global inequality trends** and provide a base for further policy decisions.
-    """, unsafe_allow_html=True)
+    st.write("📌 Highlights about global income inequality, trends, and observations...")
 
 elif page == "About":
     st.markdown("## ℹ️ About This Project")
-    st.markdown("""
-        **Global Balance – Income Inequality Dashboard**  
-
-        An interactive platform built to visualize and analyze global income inequality. Highlights include:
-
-        - **Gini Index**, **income distribution**, **top & bottom income shares**, and **population trends**.
-        - Data from 2000-2023 to capture long-term trends.
-        - Designed for policymakers, researchers, and anyone interested in global economic equity.
-
-        Built using Power BI + Streamlit & Python (Pandas, etc).
-    """, unsafe_allow_html=True)
+    st.write("This dashboard helps visualize global inequality using Gini Index and income distribution.")
 
 elif page == "Feedback":
     st.markdown("## 📝 Feedback")
@@ -220,4 +177,3 @@ elif page == "Feedback":
         st.subheader("📂 Previous Feedback")
         df = pd.read_csv("feedback.csv")
         st.dataframe(df)
-
