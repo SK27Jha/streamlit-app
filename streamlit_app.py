@@ -1,211 +1,240 @@
+# app.py
 import streamlit as st
 import pandas as pd
 import os
 from datetime import datetime
 
-# -----------------------------
-# Page Configuration
-# -----------------------------
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Custom Styling (Theme + Nav Buttons)
+# Styling: app colors + nav buttons
 # -----------------------------
-page_bg_css = """
-<style>
-    /* App background */
+st.markdown(
+    """
+    <style>
+    /* --- App background & text --- */
     .stApp {
-        background-color: #f9fafc; /* light background */
-        color: #222222; /* dark text */
+        background: linear-gradient(180deg, #f7f9fc 0%, #eef3f8 100%);
+        color: #0f1724;
     }
 
-    /* Sidebar background */
+    /* --- Top header style --- */
+    .header {
+        background-color: #ffffff;
+        padding: 14px 28px;
+        border-bottom: 1px solid rgba(16,24,40,0.06);
+        box-shadow: 0 1px 0 rgba(16,24,40,0.02);
+        margin-bottom: 18px;
+    }
+    .header h1 {
+        margin: 0;
+        color: #0f1724;
+    }
+
+    /* --- Sidebar container --- */
     section[data-testid="stSidebar"] {
-        background-color: #1a2b48; /* dark navy */
-    }
-
-    /* Sidebar radio buttons (navigation) */
-    div[role="radiogroup"] label {
-        background-color: #2c3e5b;
-        color: white !important;
-        padding: 8px 16px;
-        border-radius: 6px;
-        margin-bottom: 6px;
-        font-weight: 500;
-        cursor: pointer;
-    }
-
-    /* Highlight selected navigation button */
-    div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
-        background-color: #0073e6 !important;
-        color: white !important;
-        font-weight: bold;
-        border: 1px solid #005bb5;
+        background: #0f1724;            /* deep navy */
+        color: #ffffff;
+        padding-top: 28px;
     }
 
     /* Sidebar title */
-    section[data-testid="stSidebar"] h1, section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
-        color: white !important;
+    section[data-testid="stSidebar"] .css-1d391kg,
+    section[data-testid="stSidebar"] .css-1fv8s86 {
+        color: #ffffff !important;
     }
 
-    /* Buttons */
+    /* --- Radio / nav options: make them look like buttons --- */
+    div[role="radiogroup"] label,
+    label[data-baseweb="radio"] {
+        display: block;
+        background: #142634;           /* default button bg */
+        color: #cbd5e1 !important;     /* muted text */
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin: 6px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.12s ease, background 0.12s ease;
+        box-shadow: none;
+        border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* Hover state */
+    div[role="radiogroup"] label:hover,
+    label[data-baseweb="radio"]:hover {
+        transform: translateY(-2px);
+        background: #163447;
+        color: #ffffff !important;
+    }
+
+    /* Selected state — multiple fallbacks for selectors */
+    label[data-checked="true"],
+    div[role="radiogroup"] label[aria-checked="true"],
+    label[data-baseweb="radio"]:has(input:checked)
+    {
+        background: linear-gradient(90deg,#0073e6,#005bb5) !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 18px rgba(3,102,214,0.18);
+        border: 1px solid rgba(0,82,180,0.9);
+    }
+
+    /* Ensure radio dot remains visible */
+    div[role="radiogroup"] input[type="radio"] {
+        accent-color: #ffffff;
+    }
+
+    /* --- Primary buttons in app --- */
     div.stButton > button {
-        background-color: #0073e6;
-        color: white;
+        background: linear-gradient(90deg,#0073e6,#005bb5);
+        color: #fff;
+        padding: 8px 16px;
         border-radius: 8px;
-        padding: 0.6em 1.2em;
-        font-weight: bold;
         border: none;
+        font-weight: 600;
     }
-
     div.stButton > button:hover {
-        background-color: #005bb5;
-        color: white;
+        filter: brightness(0.95);
+        transform: translateY(-2px);
     }
 
-    /* Headings */
-    h1, h2, h3 {
-        color: #1a2b48;
+    /* Text area / inputs visual */
+    textarea, input, .stTextInput>div>input {
+        border-radius: 8px !important;
     }
-</style>
-"""
-st.markdown(page_bg_css, unsafe_allow_html=True)
+
+    /* Page headings color */
+    h1, h2, h3 {
+        color: #0f1724;
+    }
+
+    /* Make the iframe area look card-like */
+    .iframe-card {
+        background: white;
+        border-radius: 10px;
+        padding: 8px;
+        box-shadow: 0 6px 18px rgba(3,102,214,0.06);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # -----------------------------
-# Sidebar Navigation
+# Sidebar Nav (streamlit radio)
 # -----------------------------
 st.sidebar.title("Navigation")
+# Using st.radio (styled above)
 page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
 
 # -----------------------------
-# Login Page
+# Header (top area)
+# -----------------------------
+st.markdown(
+    """
+    <div class="header">
+      <h1>🌍 &nbsp; Global Balance</h1>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# -----------------------------
+# Pages
 # -----------------------------
 if page == "Login":
-    st.markdown("<h1 style='text-align: center;'>🌍 Global Balance</h1>", unsafe_allow_html=True)
-    st.subheader("🔑 Login Page")
-
+    st.markdown("## 🔑 Login Page")
     username = st.text_input("Enter Username")
     password = st.text_input("Enter Password", type="password")
-
-    if st.button("Login", use_container_width=True):
+    if st.button("Login", use_container_width=False):
         if username == "admin" and password == "1234":
             st.success("✅ Login Successful!")
         else:
             st.error("❌ Invalid Username or Password")
 
-# -----------------------------
-# Dashboard Page (Power BI iframe)
-# -----------------------------
 elif page == "Dashboard":
     st.markdown("## 📊 Dashboard")
+    st.markdown('<div class="iframe-card">', unsafe_allow_html=True)
     st.markdown(
         """
-        <iframe title="Global Income Inequality Dashboard" width="100%" height="600" 
-        src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9" 
+        <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
+        src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9"
         frameborder="0" allowFullScreen="true"></iframe>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+elif page == "Insight":
+    st.markdown("## 🔎 Insights from Dashboard")
+    st.markdown(
+        """
+        ### 📌 Key Findings
+
+        - **Gini Index**
+          - Average Gini Index across countries is around **0.43**.
+          - Ranges from **0.20 (low inequality)** to **0.65 (high inequality)**.
+        
+        - **Income Distribution**
+          - High Income group countries dominate with ~29%.
+          - Upper Middle, Lower Middle, and Low Income countries share the rest almost equally.
+        
+        - **Top vs Bottom 10%**
+          - The top 10% income share averages **40.20%**.
+          - The bottom 10% income share averages only **2.99%**.
+          - This highlights a **huge inequality gap**.
+        
+        - **Country-Level Observations**
+          - Saudi Arabia, Germany, and Canada report high average incomes.
+          - Countries like India, Mexico, and Nigeria show **higher inequality levels**.
+
+        - **Trends Over Time (2000–2023)**
+          - Fluctuations in Gini Index, but overall inequality persists.
+          - Income growth is seen in high-income countries compared to low-income nations.
+
+        ---
+        ✅ These insights help in identifying **global inequality trends** and provide a base for further policy decisions.
+        """
     )
 
-# -----------------------------
-# Insight Page
-# -----------------------------
-elif page == "Insight":
-    st.subheader("🔎 Insights from Dashboard")
-
-    st.markdown("""
-    ### 📌 Key Findings
-
-    - **Gini Index**
-      - Average Gini Index across countries is around **0.43**.
-      - Ranges from **0.20 (low inequality)** to **0.65 (high inequality)**.
-    
-    - **Income Distribution**
-      - High Income group countries dominate with ~29%.
-      - Upper Middle, Lower Middle, and Low Income countries share the rest almost equally.
-    
-    - **Top vs Bottom 10%**
-      - The top 10% income share averages **40.20%**.
-      - The bottom 10% income share averages only **2.99%**.
-      - This highlights a **huge inequality gap**.
-    
-    - **Country-Level Observations**
-      - Saudi Arabia, Germany, and Canada report high average incomes.
-      - Countries like India, Mexico, and Nigeria show **higher inequality levels**.
-
-    - **Trends Over Time (2000–2023)**
-      - Fluctuations in Gini Index, but overall inequality persists.
-      - Income growth is seen in high-income countries compared to low-income nations.
-
-    ---
-    ✅ These insights help in identifying **global inequality trends** and provide a base for further policy decisions.
-    """)
-
-# -----------------------------
-# About Page
-# -----------------------------
 elif page == "About":
-    st.subheader("ℹ️ About This Project")
+    st.markdown("## ℹ️ About This Project")
+    st.markdown(
+        """
+        ### 🌍 Global Balance – Income Inequality Dashboard  
 
-    st.markdown("""
-    ### 🌍 Global Balance – Income Inequality Dashboard  
+        This project analyzes and visualizes global income inequality using interactive dashboards and highlights:
 
-    This project is designed to **analyze and visualize global income inequality** using interactive dashboards.  
-    It brings together multiple metrics such as:  
+        - **Gini Index** — inequality metric.
+        - **Average & Distribution of Income** across income groups.
+        - **Top 10% vs Bottom 10% Share** — wealth concentration measure.
+        - **Population vs Income Trends** across 2000–2023.
 
-    - **Gini Index** → Measures inequality in income distribution.  
-    - **Average & Distribution of Income** → Across different income groups.  
-    - **Top 10% vs Bottom 10% Share** → Identifies concentration of wealth.  
-    - **Population vs Income Trends** → How demographics impact inequality.  
+        **Tools:** Power BI (visuals) + Streamlit & Python (Pandas, Matplotlib/Plotly) for web integration.
+        """
+    )
 
-    ### 🎯 Objective
-    - Provide policymakers, researchers, and analysts with clear insights into global inequality.  
-    - Track **changes over time (2000–2023)** to identify trends.  
-    - Highlight **country-level differences** between high, middle, and low-income groups.  
-
-    ### 🛠️ Tools Used
-    - **Power BI** → For dashboard design & visuals.  
-    - **Streamlit & Python (Pandas, Matplotlib/Plotly)** → For web app integration.  
-
-    ---
-    ✅ *This platform aims to make global inequality data more **transparent, interactive, and actionable.***
-    """)
-
-# -----------------------------
-# Feedback Page (with CSV Save)
-# -----------------------------
 elif page == "Feedback":
-    st.subheader("📝 Feedback")
-
+    st.markdown("## 📝 Feedback")
     feedback = st.text_area("Your feedback")
     rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5)
-
     if st.button("Send Feedback"):
         if feedback:
-            # Save feedback into CSV
             feedback_data = {
                 "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
                 "Feedback": [feedback],
-                "Rating": [rating]
+                "Rating": [rating],
             }
-
             df_new = pd.DataFrame(feedback_data)
-
             if os.path.exists("feedback.csv"):
                 df_existing = pd.read_csv("feedback.csv")
                 df = pd.concat([df_existing, df_new], ignore_index=True)
             else:
                 df = df_new
-
             df.to_csv("feedback.csv", index=False)
-
-            st.success("✅ Thank you for your feedback! It has been recorded.")
-            st.write("**Your Feedback:**", feedback)
-            st.write("**Your Rating:**", rating, "⭐")
+            st.success("✅ Thank you! Your feedback has been saved.")
         else:
             st.error("⚠️ Please enter feedback before submitting.")
-
-    # Show previous feedback if available
     if os.path.exists("feedback.csv"):
         st.markdown("---")
         st.subheader("📂 Previous Feedback")
