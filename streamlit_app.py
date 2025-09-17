@@ -7,19 +7,19 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Light Green + Black + White)
+# Styling (Parrot Green + Blue + White)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #90ee90;  /* Light Green Background */
-        color: #000000;             /* Black text */
+        background-color: #00ff7f;  /* Parrot Green */
+        color: #000000;             /* Black text for readability */
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #000000;  /* Black */
+        background-color: #0000ff;  /* Blue */
         padding: 14px 28px;
         border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
@@ -32,9 +32,24 @@ st.markdown("""
         color: #ffffff;  /* White */
     }
 
+    /* --- Logout button --- */
+    .logout-btn {
+        background:#ffffff;
+        color:#0000ff;
+        border:2px solid #0000ff;
+        padding:6px 14px;
+        border-radius:6px;
+        font-weight:600;
+        cursor:pointer;
+    }
+    .logout-btn:hover {
+        background:#0000ff;
+        color:#ffffff;
+    }
+
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #000000;  /* Black */
+        background-color: #0000ff;  /* Blue */
         color: #ffffff;
         padding-top: 28px;
     }
@@ -43,24 +58,24 @@ st.markdown("""
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        /* White */
-        color: #000000 !important;  /* Black text */
+        color: #0000ff !important;  /* Blue text */
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #000000;
+        border: 2px solid #0000ff;
         text-align: center;
         width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
-        background: #000000;
+        background: #0000ff;
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #000000 !important;   
+        background: #0000ff !important;
         color: #ffffff !important;
         border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -68,7 +83,7 @@ st.markdown("""
 
     /* --- Primary buttons --- */
     div.stButton > button {
-        background-color: #000000;
+        background-color: #0000ff;
         color: #ffffff;
         border-radius: 8px;
         padding: 10px 18px;
@@ -79,19 +94,19 @@ st.markdown("""
         width: 200px;
     }
     div.stButton > button:hover {
-        background-color: #333333;
+        background-color: #0000cc;
         transform: translateY(-2px);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 1px solid #000000 !important;
+        border: 2px solid #0000ff !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #000000;
+        color: #0000ff;
     }
 
     /* --- Card --- */
@@ -123,14 +138,7 @@ logout_html = ""
 if st.session_state.logged_in:
     logout_html = """
     <form action="#" method="get">
-        <button type="submit" name="logout" style="
-            background:#ffffff;
-            color:#000000;
-            border:1px solid #000000;
-            padding:6px 14px;
-            border-radius:6px;
-            font-weight:600;
-            cursor:pointer;">Logout</button>
+        <button type="submit" name="logout" class="logout-btn">Logout</button>
     </form>
     """
 
@@ -247,7 +255,6 @@ elif page == "Feedback":
         df = pd.read_csv("feedback.csv")
         st.dataframe(df)
 
-        # Erase feedback section
         if st.button("🗑️ Erase All Feedback"):
             os.remove("feedback.csv")
             st.warning("⚠️ All feedback has been erased.")
