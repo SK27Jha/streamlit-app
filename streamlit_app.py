@@ -6,46 +6,43 @@ from datetime import datetime
 st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (White + Light Gray Theme)
+# Styling (Enhanced UI/UX)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #ffffff;  
+        background-color: #f4f6f8;  
         color: #000000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     /* --- Top navigation header --- */
     .header {
-        background-color: #d3d3d3;
-        padding: 18px 28px;
-        border-bottom: 2px solid #ffffff;
-        margin-bottom: 18px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        border-radius: 0px 0px 12px 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        background: linear-gradient(90deg, #3d6188, #6b9bd1);
+        padding: 20px 28px;
+        border-radius: 0px 0px 14px 14px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        color: white;
     }
     .header h1 {
         margin: 0;
-        color: #3d6188;
-        font-weight: 800;
-        font-size: 34px;
+        font-weight: 900;
+        font-size: 36px;
     }
     .tagline {
-        font-size: 16px;
-        font-weight: 500;
-        color: #444;
-        margin-top: 4px;
+        font-size: 18px;
+        font-style: italic;
+        margin-top: 6px;
+        opacity: 0.9;
     }
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #d3d3d3;
+        background-color: #e0e5eb;
         color: #000000;
         padding-top: 28px;
+        border-right: 2px solid #d3d3d3;
     }
 
     /* --- Navigation buttons --- */
@@ -53,49 +50,53 @@ st.markdown("""
         display: block;
         background: #ffffff;        
         color: #3d6188 !important;  
-        padding: 12px 16px;
-        border-radius: 10px;
-        margin: 8px 16px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin: 10px 16px;
         font-weight: 600;
         cursor: pointer;
         border: 2px solid #3d6188;
         text-align: center;
         width: 85% !important;
-        transition: background 0.3s, transform 0.2s;
+        transition: all 0.3s ease-in-out;
     }
     div[role="radiogroup"] label:hover {
         background: #3d6188;
         color: #ffffff !important;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
         background: #3d6188 !important;  
         color: #ffffff !important;
-        border: 2px solid #ffffff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-left: 6px solid #ff6f61; /* highlighted indicator */
+        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
     }
 
     /* --- Buttons --- */
     div.stButton > button {
         background-color: #ffffff;
         color: #3d6188;
-        border-radius: 8px;
-        padding: 10px 18px;
-        font-weight: 600;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 700;
         border: 2px solid #3d6188;
-        transition: background-color 0.2s, transform 0.2s, color 0.2s;
-        margin: 6px auto;
+        transition: all 0.3s ease-in-out;
+        margin: 8px auto;
+        display: block;
     }
     div.stButton > button:hover {
         background-color: #3d6188;
         color: #ffffff;
         transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
-        border-radius: 8px !important;
+        border-radius: 10px !important;
         border: 2px solid #3d6188 !important;
+        padding: 8px !important;
     }
 
     /* --- Headings --- */
@@ -106,11 +107,16 @@ st.markdown("""
 
     /* --- Card styling --- */
     .card {
-        background: #f9f9f9;
-        border-radius: 12px;
-        padding: 22px;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 24px;
         margin: 16px 0;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        transition: all 0.3s ease-in-out;
+    }
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.2);
     }
     .card h3 {
         margin-top: 0;
@@ -119,27 +125,42 @@ st.markdown("""
 
     /* --- Feedback Table --- */
     .feedback-table {
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     }
     .feedback-table th {
         background-color: #3d6188 !important;
         color: white !important;
         font-weight: bold;
-        padding: 10px;
+        padding: 12px;
     }
     .feedback-table td {
         padding: 10px;
     }
     .feedback-table tr:nth-child(even) {
-        background-color: #f9f9f9;
+        background-color: #f2f2f2;
+    }
+
+    /* --- Metrics --- */
+    .stMetric {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    }
+    .stMetric:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
     /* --- Remove footer --- */
     #MainMenu, footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
+
 
 # -----------------------------
 # Session state for login/logout
