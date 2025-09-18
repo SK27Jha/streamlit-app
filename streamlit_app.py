@@ -6,8 +6,8 @@ from datetime import datetime
 
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
-# -----------------------------
-# Styling (Corporate Grey-Blue Theme)
+
+# Styling (Light Gray Theme)
 # -----------------------------
 st.markdown("""
 <style>
@@ -19,7 +19,7 @@ st.markdown("""
 
     /* --- Top header style --- */
     .header {
-        background-color: #3d6188;  /* Blue-Grey */
+        background-color: #d6d6d6;  /* Light Gray */
         padding: 14px 28px;
         border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
@@ -31,14 +31,14 @@ st.markdown("""
     }
     .header h1 {
         margin: 0;
-        color: #ffffff;
+        color: #000000; /* Black text on light header */
         font-weight: 700;
     }
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #3d6188;
-        color: #ffffff;
+        background-color: #d6d6d6;  /* Light Gray */
+        color: #000000;
         padding-top: 28px;
     }
 
@@ -46,24 +46,24 @@ st.markdown("""
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
-        color: #3d6188 !important;  
+        color: #000000 !important;  
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
-        border: 2px solid #3d6188;
+        border: 2px solid #d6d6d6;
         text-align: center;
         width: 85% !important;
-        transition: background 0.3s, transform 0.2s;
+        transition: background 0.3s, transform 0.2s, color 0.2s;
     }
     div[role="radiogroup"] label:hover {
-        background: #3d6188;
+        background: #b0b0b0;
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #3d6188 !important;  
+        background: #b0b0b0 !important;  
         color: #ffffff !important;
         border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -72,16 +72,16 @@ st.markdown("""
     /* --- Primary buttons (White with hover) --- */
     div.stButton > button {
         background-color: #ffffff;
-        color: #3d6188;
+        color: #000000;
         border-radius: 8px;
         padding: 10px 18px;
         font-weight: 600;
-        border: 2px solid #3d6188;
+        border: 2px solid #b0b0b0;
         transition: background-color 0.2s, transform 0.2s, color 0.2s;
         margin: 6px auto;
     }
     div.stButton > button:hover {
-        background-color: #3d6188;
+        background-color: #b0b0b0;
         color: #ffffff;
         transform: translateY(-2px);
     }
@@ -89,12 +89,12 @@ st.markdown("""
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 2px solid #3d6188 !important;
+        border: 2px solid #b0b0b0 !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #3d6188;
+        color: #000000;
         font-weight: 700;
     }
 
@@ -114,7 +114,7 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .feedback-table th {
-        background-color: #3d6188 !important;
+        background-color: #b0b0b0 !important;
         color: white !important;
         font-weight: bold;
         padding: 10px;
