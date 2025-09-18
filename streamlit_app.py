@@ -7,19 +7,19 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Light Green + Ocean Blue + White)
+# Styling (Corporate Ocean Blue Theme)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #90ee90;  /* Light Green */
+        background-color: #e3f2fd;  /* Very Light Blue */
         color: #000000;             /* Black text */
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #0077b6;  /* Ocean Blue Dark */
+        background-color: #1565c0;  /* Deep Blue */
         padding: 14px 28px;
         border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
@@ -29,27 +29,27 @@ st.markdown("""
     }
     .header h1 {
         margin: 0;
-        color: #ffffff;  /* White */
+        color: #ffffff;  /* White text */
     }
 
     /* --- Logout button --- */
     .logout-btn {
         background:#ffffff;
-        color:#0096c7;   /* Ocean Blue Light */
-        border:2px solid #0096c7;
+        color:#1565c0;
+        border:2px solid #1565c0;
         padding:6px 14px;
         border-radius:6px;
         font-weight:600;
         cursor:pointer;
     }
     .logout-btn:hover {
-        background:#0096c7;
+        background:#1565c0;
         color:#ffffff;
     }
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #0096c7;  /* Ocean Blue Light */
+        background-color: #1565c0;  /* Deep Blue */
         color: #ffffff;
         padding-top: 28px;
     }
@@ -58,24 +58,24 @@ st.markdown("""
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
-        color: #0096c7 !important;  
+        color: #1565c0 !important;  
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 2px solid #0096c7;
+        border: 2px solid #42a5f5;  /* Sky Blue border */
         text-align: center;
         width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
-        background: #0096c7;
+        background: #42a5f5;
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #0077b6 !important;  
+        background: #1565c0 !important;  
         color: #ffffff !important;
         border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -83,7 +83,7 @@ st.markdown("""
 
     /* --- Primary buttons --- */
     div.stButton > button {
-        background-color: #0096c7;  
+        background-color: #42a5f5;  /* Sky Blue */
         color: #ffffff;
         border-radius: 8px;
         padding: 10px 18px;
@@ -94,19 +94,19 @@ st.markdown("""
         width: 200px;
     }
     div.stButton > button:hover {
-        background-color: #0077b6;
+        background-color: #1565c0;
         transform: translateY(-2px);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 2px solid #0096c7 !important;
+        border: 2px solid #42a5f5 !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #0077b6;
+        color: #1565c0;
     }
 
     /* --- Card --- */
