@@ -277,19 +277,15 @@ elif page == "🔎 Insight":
     """)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ---- New Section: CSV Data ----
+    # ---- Dataset Insights ----
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📊 Dataset Insights")
-    
-    import pandas as pd
-    
-    # Load the uploaded CSV file
-    df_insight = pd.read_csv("/mnt/data/cce41cfb-8320-481d-8d37-f1bc32ffe7dc.csv")
-    
-    # Display the dataframe
+
+    # Load the CSV directly
+    df_insight = pd.read_csv("/mnt/data/a4763003-e63f-4c5f-a0ae-500467ce4b8c.csv")
     st.dataframe(df_insight, use_container_width=True)
-    
-    # Basic metrics from CSV
+
+    # Basic numeric metrics
     st.markdown("---")
     st.write("### 📈 Summary Metrics")
     for col in df_insight.select_dtypes(include=['int64', 'float64']).columns:
