@@ -8,21 +8,27 @@ st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 
 # -----------------------------
-# Styling (Full Screen Light Gray Layout)
+# Global Styling (Fix Background + Buttons)
 # -----------------------------
 st.markdown("""
 <style>
-    /* --- App background --- */
-    .stApp {
-        background-color: #f3f3f4;  
+    /* --- Global App Background (ALL PAGES) --- */
+    .stApp, .block-container, .stMarkdown, .stDataFrame, .stPlotlyChart, .stImage, .stTable {
+        background-color: #f3f3f4 !important;
         color: #000000;
     }
 
-    /* --- Top header style --- */
+    /* --- Sidebar (Navigation) --- */
+    section[data-testid="stSidebar"] {
+        background-color: #f3f3f4 !important;
+        padding-top: 1rem;
+    }
+
+    /* --- Top header --- */
     .header {
-        background-color: #f3f3f4;  /* Same as background */
+        background-color: #f3f3f4 !important;
         padding: 14px 28px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -34,21 +40,7 @@ st.markdown("""
         font-weight: 700;
     }
 
-    /* --- Sidebar (Navigation) --- */
-    section[data-testid="stSidebar"] {
-        background-color: #f3f3f4;  /* Match dashboard background */
-        color: #000000;
-        padding: 0;
-    }
-
-    /* Make sidebar take full height like Streamlit official */
-    section[data-testid="stSidebar"] > div {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* --- Navigation buttons (radio) --- */
+    /* --- Navigation buttons (radio in sidebar) --- */
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
@@ -64,7 +56,7 @@ st.markdown("""
         transition: background 0.3s, transform 0.2s, color 0.2s;
     }
     div[role="radiogroup"] label:hover {
-        background: #d6d6d6;
+        background: #e1e1e1;
         color: #000000 !important;
         transform: translateX(3px);
     }
@@ -75,42 +67,43 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* --- Primary buttons (white with hover) --- */
+    /* --- Buttons (same everywhere) --- */
     div.stButton > button {
-        background-color: #ffffff;
-        color: #000000;
-        border-radius: 6px;
-        padding: 10px 18px;
-        font-weight: 600;
-        border: 1px solid #3d6188;
-        transition: background-color 0.2s, transform 0.2s, color 0.2s;
-        margin: 6px auto;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border-radius: 6px !important;
+        padding: 10px 20px !important;
+        font-weight: 600 !important;
+        border: 1px solid #3d6188 !important;
+        margin: 10px 0 !important;
+        transition: background-color 0.3s, transform 0.2s, color 0.2s;
     }
     div.stButton > button:hover {
-        background-color: #3d6188;
-        color: #ffffff;
+        background-color: #3d6188 !important;
+        color: #ffffff !important;
         transform: translateY(-2px);
     }
 
-    /* --- Main content full width --- */
-    .block-container {
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-        max-width: 100%;
+    /* --- Card style --- */
+    .iframe-card {
+        background: #ffffff !important;
+        border-radius: 10px !important;
+        padding: 14px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        margin-bottom: 20px !important;
     }
 
-    /* --- Card --- */
-    .iframe-card {
-        background: #ffffff;
-        border-radius: 10px;
-        padding: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
+    /* --- Full screen layout --- */
+    .block-container {
+        padding-top: 0rem !important;
+        padding-bottom: 0rem !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+        max-width: 100% !important;
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # -----------------------------
