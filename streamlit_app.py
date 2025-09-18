@@ -6,13 +6,13 @@ from datetime import datetime
 st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Enhanced UI/UX)
+# Styling (White + Light Gray Theme)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #f4f6f8;  
+        background-color: #f5f6fa;  
         color: #000000;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
@@ -22,8 +22,13 @@ st.markdown("""
         background: linear-gradient(90deg, #3d6188, #6b9bd1);
         padding: 20px 28px;
         border-radius: 0px 0px 14px 14px;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
         color: white;
+        transition: all 0.4s ease-in-out;
+    }
+    .header:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.3);
     }
     .header h1 {
         margin: 0;
@@ -45,7 +50,6 @@ st.markdown("""
         border-right: 2px solid #d3d3d3;
     }
 
-    /* --- Navigation buttons --- */
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
@@ -64,13 +68,13 @@ st.markdown("""
         background: #3d6188;
         color: #ffffff !important;
         transform: translateY(-3px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
         background: #3d6188 !important;  
         color: #ffffff !important;
-        border-left: 6px solid #ff6f61; /* highlighted indicator */
-        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        border-left: 6px solid #ff6f61;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     }
 
     /* --- Buttons --- */
@@ -89,7 +93,7 @@ st.markdown("""
         background-color: #3d6188;
         color: #ffffff;
         transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
     }
 
     /* --- Inputs --- */
@@ -97,12 +101,11 @@ st.markdown("""
         border-radius: 10px !important;
         border: 2px solid #3d6188 !important;
         padding: 8px !important;
+        transition: all 0.3s ease-in-out;
     }
-
-    /* --- Headings --- */
-    h1, h2, h3 {
-        color: #3d6188;
-        font-weight: 700;
+    textarea:focus, input:focus, .stTextInput>div>input:focus {
+        border-color: #6b9bd1 !important;
+        box-shadow: 0 0 8px #6b9bd1;
     }
 
     /* --- Card styling --- */
@@ -116,7 +119,7 @@ st.markdown("""
     }
     .card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.25);
     }
     .card h3 {
         margin-top: 0;
@@ -128,6 +131,7 @@ st.markdown("""
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        transition: all 0.3s ease-in-out;
     }
     .feedback-table th {
         background-color: #3d6188 !important;
@@ -137,9 +141,14 @@ st.markdown("""
     }
     .feedback-table td {
         padding: 10px;
+        transition: all 0.2s ease-in-out;
     }
     .feedback-table tr:nth-child(even) {
         background-color: #f2f2f2;
+    }
+    .feedback-table tr:hover td {
+        background-color: #dce6f1;
+        transform: scale(1.01);
     }
 
     /* --- Metrics --- */
@@ -160,7 +169,6 @@ st.markdown("""
     #MainMenu, footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
-
 
 # -----------------------------
 # Session state for login/logout
