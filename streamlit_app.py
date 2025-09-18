@@ -13,19 +13,19 @@ st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #ffffff;  /* White */
+        background-color: #ffffff;  
         color: #000000;
     }
 
     /* --- Top navigation header --- */
     .header {
-        background-color: #d3d3d3;  /* Light Gray */
-        padding: 16px 28px;
+        background-color: #d3d3d3;
+        padding: 18px 28px;
         border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
         border-radius: 0px 0px 12px 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
@@ -34,6 +34,12 @@ st.markdown("""
         color: #3d6188;
         font-weight: 800;
         font-size: 34px;
+    }
+    .tagline {
+        font-size: 16px;
+        font-weight: 500;
+        color: #444;
+        margin-top: 4px;
     }
 
     /* --- Sidebar --- */
@@ -126,6 +132,16 @@ st.markdown("""
     .feedback-table tr:nth-child(even) {
         background-color: #f9f9f9;
     }
+
+    /* --- Footer --- */
+    .footer {
+        margin-top: 30px;
+        padding: 15px;
+        text-align: center;
+        font-size: 14px;
+        color: #555;
+        border-top: 1px solid #ccc;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -136,24 +152,28 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 # -----------------------------
-# Sidebar Nav
+# Sidebar Nav (with icons)
 # -----------------------------
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
+st.sidebar.title("🌍 Navigation")
+page = st.sidebar.radio(
+    "Go to", 
+    ["🔑 Login", "📊 Dashboard", "🔎 Insight", "ℹ️ About", "📝 Feedback"]
+)
 
 # -----------------------------
-# Header (Global Balance)
+# Header
 # -----------------------------
 st.markdown(f"""
 <div class="header">
-  <h1>🌍Global Income Inequality Dashboard</h1>
+  <h1>🌍 Global Income Inequality Dashboard</h1>
+  <p class="tagline">Tracking inequality trends across countries in real-time.</p>
 </div>
 """, unsafe_allow_html=True)
 
 # -----------------------------
 # Pages
 # -----------------------------
-if page == "Login":
+if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
 
     if st.session_state.logged_in:
@@ -175,8 +195,17 @@ if page == "Login":
     else:
         st.success("✅ You are already logged in.")
 
-elif page == "Dashboard":
-    st.markdown("## 📊 Dashboard")
+elif page == "📊 Dashboard":
+    st.markdown("## 📊 Dashboard Overview")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("🌎 Global Avg Gini Index", "38.5", "⬆️ 1.2%")
+    with col2:
+        st.metric("📈 Highest Inequality", "South Africa", "+65.0 Gini")
+    with col3:
+        st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
+
     st.markdown('<div class="iframe-card">', unsafe_allow_html=True)
     st.markdown("""
         <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
@@ -185,7 +214,7 @@ elif page == "Dashboard":
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-elif page == "Insight":
+elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights from Dashboard")
     st.markdown("""
     ### 📌 Key Observations:
@@ -199,7 +228,7 @@ elif page == "Insight":
     ✅ These insights help policymakers and researchers design **targeted solutions**.
     """)
 
-elif page == "About":
+elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
     st.markdown("""
     ### 🌍 Global Balance – Income Inequality Dashboard  
@@ -221,7 +250,7 @@ elif page == "About":
     ✅ *Making inequality data more **transparent, interactive, and actionable.***
     """)
 
-elif page == "Feedback":
+elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
 
     with st.form("feedback_form", clear_on_submit=True):
@@ -257,7 +286,19 @@ elif page == "Feedback":
         st.dataframe(df, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
+        avg_rating = df["Rating"].mean()
+        st.metric("⭐ Average Rating", f"{avg_rating:.2f} / 5")
+
         if st.button("🗑️ Erase All Feedback"):
             os.remove("feedback.csv")
             st.warning("⚠️ All feedback has been erased.")
             st.rerun()
+
+# -----------------------------
+# Footer
+# -----------------------------
+st.markdown("""
+<div class="footer">
+    🌍 Developed with ❤️ using <b>Python, Streamlit & Power BI</b> | © 2025 Global Balance Project
+</div>
+""", unsafe_allow_html=True)
