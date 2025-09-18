@@ -256,6 +256,7 @@ elif page == "📊 Dashboard":
 elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
 
+    # Key Observations Card
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📌 Key Observations")
     st.write("""
@@ -267,6 +268,7 @@ elif page == "🔎 Insight":
     """)
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # Why It Matters Card
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("💡 Why It Matters")
     st.write("""
@@ -274,6 +276,27 @@ elif page == "🔎 Insight":
     design **targeted solutions** for inclusive growth and sustainable development.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
+
+    # ---- New Section: CSV Data ----
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📊 Dataset Insights")
+    
+    import pandas as pd
+    
+    # Load the uploaded CSV file
+    df_insight = pd.read_csv("/mnt/data/cce41cfb-8320-481d-8d37-f1bc32ffe7dc.csv")
+    
+    # Display the dataframe
+    st.dataframe(df_insight, use_container_width=True)
+    
+    # Basic metrics from CSV
+    st.markdown("---")
+    st.write("### 📈 Summary Metrics")
+    for col in df_insight.select_dtypes(include=['int64', 'float64']).columns:
+        st.metric(f"{col} Average", f"{df_insight[col].mean():.2f}")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
