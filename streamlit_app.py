@@ -4,7 +4,7 @@ import pandas as pd
 import os
 from datetime import datetime
 
-st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
+st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide")
 
 # -----------------------------
 # Styling (Light Green + Light Blue + White)
@@ -136,7 +136,7 @@ page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Fee
 # -----------------------------
 st.markdown(f"""
 <div class="header">
-  <h1>🌍 &nbsp; Global Balance</h1>
+  <h1>🌍 &nbsp; Global Income Inequality Dashboard</h1>
 </div>
 """, unsafe_allow_html=True)
 
@@ -193,7 +193,7 @@ elif page == "Insight":
 elif page == "About":
     st.markdown("## ℹ️ About This Project")
     st.markdown("""
-    ### 🌍 Global Balance – Income Inequality Dashboard  
+    ### 🌍 Global – Income Inequality Dashboard  
 
     This project is designed to **analyze and visualize global income inequality**.  
     It combines interactive dashboards with powerful analytics to highlight inequality patterns.  
