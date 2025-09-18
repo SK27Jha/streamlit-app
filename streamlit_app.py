@@ -7,31 +7,49 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Sunset Gradient Theme)
+# Styling (Light Green + Ocean Blue + White)
 # -----------------------------
 st.markdown("""
 <style>
-    /* --- App background with gradient --- */
+    /* --- App background --- */
     .stApp {
-        background: linear-gradient(to bottom right, #ffecd2, #fcb69f);
-        color: #000000;
+        background-color: #90ee90;  /* Light Green */
+        color: #000000;             /* Black text */
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #ff7043;  /* Deep Orange */
+        background-color: #0077b6;  /* Ocean Blue Dark */
         padding: 14px 28px;
-        border-bottom: 2px solid #d84315;
+        border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     .header h1 {
         margin: 0;
         color: #ffffff;  /* White */
     }
 
+    /* --- Logout button --- */
+    .logout-btn {
+        background:#ffffff;
+        color:#0096c7;   /* Ocean Blue Light */
+        border:2px solid #0096c7;
+        padding:6px 14px;
+        border-radius:6px;
+        font-weight:600;
+        cursor:pointer;
+    }
+    .logout-btn:hover {
+        background:#0096c7;
+        color:#ffffff;
+    }
+
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #ff7043;  /* Deep Orange */
+        background-color: #0096c7;  /* Ocean Blue Light */
         color: #ffffff;
         padding-top: 28px;
     }
@@ -39,25 +57,25 @@ st.markdown("""
     /* --- Navigation buttons --- */
     div[role="radiogroup"] label {
         display: block;
-        background: #ffffff;
-        color: #d84315 !important;  
+        background: #ffffff;        
+        color: #0096c7 !important;  
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
-        border: 1px solid #d84315;
+        border: 2px solid #0096c7;
         text-align: center;
         width: 85% !important;
     }
     div[role="radiogroup"] label:hover {
-        background: #ffab91;  /* Light Coral */
+        background: #0096c7;
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #d84315 !important;   /* Dark Orange-Red */
+        background: #0077b6 !important;  
         color: #ffffff !important;
         border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -65,31 +83,30 @@ st.markdown("""
 
     /* --- Primary buttons --- */
     div.stButton > button {
-        background-color: #d84315;
+        background-color: #0096c7;  
         color: #ffffff;
         border-radius: 8px;
-        padding: 12px 20px;
+        padding: 10px 18px;
         font-weight: 600;
         border: none;
         transition: background-color 0.2s, transform 0.2s;
-        display: block;
-        margin: 12px auto;
-        width: 240px;
+        margin: 6px auto;
+        width: 200px;
     }
     div.stButton > button:hover {
-        background-color: #ff7043;
+        background-color: #0077b6;
         transform: translateY(-2px);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 1px solid #d84315 !important;
+        border: 2px solid #0096c7 !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #d84315;
+        color: #0077b6;
     }
 
     /* --- Card --- */
@@ -103,6 +120,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -----------------------------
+# Session state for login/logout
+# -----------------------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+# -----------------------------
 # Sidebar Nav
 # -----------------------------
 st.sidebar.title("Navigation")
@@ -111,7 +134,7 @@ page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Fee
 # -----------------------------
 # Header
 # -----------------------------
-st.markdown("""
+st.markdown(f"""
 <div class="header">
   <h1>🌍 &nbsp; Global Balance</h1>
 </div>
@@ -122,13 +145,25 @@ st.markdown("""
 # -----------------------------
 if page == "Login":
     st.markdown("## 🔑 Login Page")
-    username = st.text_input("Enter Username")
-    password = st.text_input("Enter Password", type="password")
-    if st.button("Login"):
-        if username == "admin" and password == "1234":
-            st.success("✅ Login Successful!")
-        else:
-            st.error("❌ Invalid Username or Password")
+
+    if st.session_state.logged_in:
+        if st.button("🚪 Logout", key="logout_btn"):
+            st.session_state.logged_in = False
+            st.success("✅ Logged out successfully!")
+            st.rerun()
+
+    if not st.session_state.logged_in:
+        username = st.text_input("Enter Username")
+        password = st.text_input("Enter Password", type="password")
+        if st.button("Login"):
+            if username == "admin" and password == "1234":
+                st.session_state.logged_in = True
+                st.success("✅ Login Successful!")
+                st.rerun()
+            else:
+                st.error("❌ Invalid Username or Password")
+    else:
+        st.success("✅ You are already logged in.")
 
 elif page == "Dashboard":
     st.markdown("## 📊 Dashboard")
@@ -179,32 +214,17 @@ elif page == "About":
 elif page == "Feedback":
     st.markdown("## 📝 Feedback")
 
-    # --- Persistent rating state ---
-    if "rating" not in st.session_state:
-        st.session_state.rating = 0
-
-    def set_rating(value):
-        st.session_state.rating = value
-
     with st.form("feedback_form", clear_on_submit=True):
         feedback = st.text_area("Your feedback")
-
-        st.markdown("### ⭐ Rate this Dashboard")
-        cols = st.columns(5)
-        for i, col in enumerate(cols, start=1):
-            if col.button("⭐ " * i, key=f"star_{i}"):
-                set_rating(i)
-
-        st.write(f"Selected Rating: {st.session_state.rating} ⭐")
-
+        rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, 3)
         submitted = st.form_submit_button("Send Feedback")
 
         if submitted:
-            if feedback.strip() and st.session_state.rating > 0:
+            if feedback.strip():
                 feedback_data = {
                     "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
                     "Feedback": [feedback],
-                    "Rating": [st.session_state.rating],
+                    "Rating": [rating],
                 }
                 df_new = pd.DataFrame(feedback_data)
 
@@ -215,13 +235,17 @@ elif page == "Feedback":
                     df = df_new
 
                 df.to_csv("feedback.csv", index=False)
-                st.success(f"✅ Thank you! Feedback saved with rating {st.session_state.rating} ⭐")
+                st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
             else:
-                st.error("⚠️ Please enter feedback and select a rating.")
+                st.error("⚠️ Please enter feedback before submitting.")
 
-    # --- Show previous feedback ---
     if os.path.exists("feedback.csv"):
         st.markdown("---")
         st.subheader("📂 Previous Feedback")
         df = pd.read_csv("feedback.csv")
         st.dataframe(df)
+
+        if st.button("🗑️ Erase All Feedback"):
+            os.remove("feedback.csv")
+            st.warning("⚠️ All feedback has been erased.")
+            st.rerun()
