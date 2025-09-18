@@ -7,38 +7,53 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (White Background + Light Gray Nav)
+# Styling (White + Light Gray Theme)
 # -----------------------------
 st.markdown("""
 <style>
-    /* --- Global App Background (ALL PAGES, including Dashboard) --- */
-    .stApp, .block-container {
-        background-color: #ffffff !important;
+    /* --- App background --- */
+    .stApp {
+        background-color: #ffffff;  /* White */
         color: #000000;
     }
 
-    /* --- Top header style --- */
+    /* --- Top Global Dashboard Header --- */
+    .main-header {
+        background-color: #ffffff;  /* White background */
+        padding: 20px;
+        text-align: center;
+        border-bottom: 2px solid #d3d3d3;
+        margin-bottom: 10px;
+    }
+    .main-header h1 {
+        margin: 0;
+        font-weight: 800;
+        font-size: 40px;
+        color: #3d6188;
+    }
+
+    /* --- Top navigation header --- */
     .header {
-        background-color: #f3f3f4;  /* Light Gray */
+        background-color: #d3d3d3;  /* Light Gray */
         padding: 14px 28px;
-        border-bottom: 1px solid #d6d6d6;
+        border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-radius: 0px 0px 12px 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
-    .header h1 {
+    .header h2 {
         margin: 0;
-        color: #000000;  /* Black text */
+        color: #3d6188;
         font-weight: 700;
     }
 
-    /* --- Sidebar (Navigation) --- */
+    /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #f3f3f4 !important;  /* Light Gray */
-        color: #000000 !important;
+        background-color: #d3d3d3;
+        color: #000000;
         padding-top: 28px;
     }
 
@@ -46,13 +61,13 @@ st.markdown("""
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
-        color: #000000 !important;  
+        color: #3d6188 !important;  
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
-        border: 1px solid #d6d6d6;
+        border: 2px solid #3d6188;
         text-align: center;
         width: 85% !important;
         transition: background 0.3s, transform 0.2s;
@@ -65,11 +80,11 @@ st.markdown("""
     div[role="radiogroup"] label[aria-checked="true"] {
         background: #3d6188 !important;  
         color: #ffffff !important;
-        border: 1px solid #ffffff;
+        border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    /* --- Primary buttons (White with hover Blue-Grey) --- */
+    /* --- Buttons --- */
     div.stButton > button {
         background-color: #ffffff;
         color: #3d6188;
@@ -89,8 +104,7 @@ st.markdown("""
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 1px solid #d6d6d6 !important;
-        background: #ffffff !important;
+        border: 2px solid #3d6188 !important;
     }
 
     /* --- Headings --- */
@@ -104,7 +118,7 @@ st.markdown("""
         background: #ffffff;
         border-radius: 10px;
         padding: 12px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         margin-bottom: 20px;
     }
 
@@ -129,12 +143,20 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
 # -----------------------------
 # Session state for login/logout
 # -----------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+
+# -----------------------------
+# Main Header (Global Dashboard)
+# -----------------------------
+st.markdown("""
+<div class="main-header">
+    <h1>🌍 Global Dashboard</h1>
+</div>
+""", unsafe_allow_html=True)
 
 # -----------------------------
 # Sidebar Nav
@@ -143,16 +165,16 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
 
 # -----------------------------
-# Header
+# Header (Navigation Header)
 # -----------------------------
 st.markdown(f"""
 <div class="header">
-  <h1>🌍 &nbsp; Global Balance</h1>
+  <h2>Global Balance</h2>
 </div>
 """, unsafe_allow_html=True)
 
 # -----------------------------
-# Pages
+# Pages (Same as before)
 # -----------------------------
 if page == "Login":
     st.markdown("## 🔑 Login Page")
