@@ -4,7 +4,7 @@ import pandas as pd
 import os
 from datetime import datetime
 
-st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
+st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide")
 
 # -----------------------------
 # Styling (White + Light Gray Theme)
@@ -146,7 +146,7 @@ page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Fee
 # -----------------------------
 st.markdown(f"""
 <div class="header">
-  <h1>🌍 Global Balance</h1>
+  <h1>🌍Global Income Inequality Dashboard</h1>
 </div>
 """, unsafe_allow_html=True)
 
