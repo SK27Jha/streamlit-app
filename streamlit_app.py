@@ -7,13 +7,13 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Parrot Green + Light Blue + White)
+# Styling (Light Green + Light Blue + White)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #00ff7f;  /* Parrot Green */
+        background-color: #90ee90;  /* Light Green */
         color: #000000;             /* Black text */
     }
 
@@ -132,35 +132,27 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
 
 # -----------------------------
-# Header (with logout if logged in)
+# Header (always visible)
 # -----------------------------
-logout_html = ""
-if st.session_state.logged_in:
-    logout_html = """
-    <form action="#" method="get">
-        <button type="submit" name="logout" class="logout-btn">Logout</button>
-    </form>
-    """
-
 st.markdown(f"""
 <div class="header">
   <h1>🌍 &nbsp; Global Balance</h1>
-  {logout_html}
 </div>
 """, unsafe_allow_html=True)
-
-# Logout button handling
-query_params = st.query_params
-if "logout" in query_params:
-    st.session_state.logged_in = False
-    st.query_params.clear()
-    st.rerun()
 
 # -----------------------------
 # Pages
 # -----------------------------
 if page == "Login":
     st.markdown("## 🔑 Login Page")
+
+    # Show Logout button at the top of Login page if already logged in
+    if st.session_state.logged_in:
+        if st.button("🚪 Logout", key="logout_btn"):
+            st.session_state.logged_in = False
+            st.success("✅ Logged out successfully!")
+            st.rerun()
+
     if not st.session_state.logged_in:
         username = st.text_input("Enter Username")
         password = st.text_input("Enter Password", type="password")
