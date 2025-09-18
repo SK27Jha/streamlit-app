@@ -1,4 +1,3 @@
-# app.py
 import streamlit as st
 import pandas as pd
 import os
@@ -105,13 +104,17 @@ st.markdown("""
         font-weight: 700;
     }
 
-    /* --- Card / iframe holder --- */
-    .iframe-card {
-        background: #ffffff;
-        border-radius: 10px;
-        padding: 12px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        margin-bottom: 20px;
+    /* --- Card styling --- */
+    .card {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 22px;
+        margin: 16px 0;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .card h3 {
+        margin-top: 0;
+        color: #3d6188;
     }
 
     /* --- Feedback Table --- */
@@ -133,15 +136,8 @@ st.markdown("""
         background-color: #f9f9f9;
     }
 
-    /* --- Footer --- */
-    .footer {
-        margin-top: 30px;
-        padding: 15px;
-        text-align: center;
-        font-size: 14px;
-        color: #555;
-        border-top: 1px solid #ccc;
-    }
+    /* --- Remove footer --- */
+    #MainMenu, footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -152,7 +148,7 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 # -----------------------------
-# Sidebar Nav (with icons)
+# Sidebar Nav
 # -----------------------------
 st.sidebar.title("🌍 Navigation")
 page = st.sidebar.radio(
@@ -206,7 +202,7 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    st.markdown('<div class="iframe-card">', unsafe_allow_html=True)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
         <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
         src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9"
@@ -215,40 +211,55 @@ elif page == "📊 Dashboard":
     st.markdown("</div>", unsafe_allow_html=True)
 
 elif page == "🔎 Insight":
-    st.markdown("## 🔎 Insights from Dashboard")
-    st.markdown("""
-    ### 📌 Key Observations:
+    st.markdown("## 🔎 Insights")
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📌 Key Observations")
+    st.write("""
     - Countries with **higher Gini Index** show **greater inequality**.  
     - Developed nations often have **lower inequality** but slower improvement.  
     - Developing countries display **wider income gaps** due to uneven distribution.  
     - Population growth in some regions correlates with **higher inequality trends**.  
     - Wealth concentration is highest in the **top 10%**, especially in emerging markets.  
-
-    ---
-    ✅ These insights help policymakers and researchers design **targeted solutions**.
     """)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("💡 Why It Matters")
+    st.write("""
+    Understanding income inequality helps policymakers, researchers, and organizations  
+    design **targeted solutions** for inclusive growth and sustainable development.
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
-    st.markdown("""
-    ### 🌍 Global Balance – Income Inequality Dashboard  
 
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🌍 Global Balance – Income Inequality Dashboard")
+    st.write("""
     This project is designed to **analyze and visualize global income inequality**.  
     It combines interactive dashboards with powerful analytics to highlight inequality patterns.  
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    #### 🎯 Objectives:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🎯 Objectives")
+    st.write("""
     - Measure **income inequality using Gini Index**.  
     - Compare **top 10% vs bottom 10% income share**.  
     - Track **global and country-level changes (2000–2023)**.  
     - Provide actionable insights for **researchers, students, and policymakers**.  
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    #### 🛠️ Tools Used:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🛠️ Tools Used")
+    st.write("""
     - **Power BI** → For interactive dashboard visuals.  
     - **Streamlit & Python (Pandas)** → For web app integration.  
-
-    ---
-    ✅ *Making inequality data more **transparent, interactive, and actionable.***
     """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
@@ -293,12 +304,3 @@ elif page == "📝 Feedback":
             os.remove("feedback.csv")
             st.warning("⚠️ All feedback has been erased.")
             st.rerun()
-
-# -----------------------------
-# Footer
-# -----------------------------
-st.markdown("""
-<div class="footer">
-    🌍 Developed with ❤️ using <b>Python, Streamlit & Power BI</b> | © 2025 Global Balance Project
-</div>
-""", unsafe_allow_html=True)
