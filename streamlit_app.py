@@ -6,15 +6,16 @@ from datetime import datetime
 st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (White + Light Gray Theme)
+# Styling (White + Animations)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #f5f6fa;  
+        background-color: #ffffff;  
         color: #000000;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition: background 0.5s ease-in-out;
     }
 
     /* --- Top navigation header --- */
@@ -25,6 +26,7 @@ st.markdown("""
         box-shadow: 0 6px 18px rgba(0,0,0,0.25);
         color: white;
         transition: all 0.4s ease-in-out;
+        animation: fadeSlide 1s ease-in-out;
     }
     .header:hover {
         transform: scale(1.02);
@@ -44,7 +46,7 @@ st.markdown("""
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #e0e5eb;
+        background-color: #f8f9fa;
         color: #000000;
         padding-top: 28px;
         border-right: 2px solid #d3d3d3;
@@ -62,12 +64,13 @@ st.markdown("""
         border: 2px solid #3d6188;
         text-align: center;
         width: 85% !important;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.4s ease-in-out;
+        animation: fadeSlide 0.8s ease-in-out;
     }
     div[role="radiogroup"] label:hover {
         background: #3d6188;
         color: #ffffff !important;
-        transform: translateY(-3px);
+        transform: translateY(-3px) scale(1.02);
         box-shadow: 0 6px 16px rgba(0,0,0,0.2);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
@@ -85,15 +88,16 @@ st.markdown("""
         padding: 10px 20px;
         font-weight: 700;
         border: 2px solid #3d6188;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.4s ease-in-out;
         margin: 8px auto;
         display: block;
+        animation: fadeSlide 1s ease-in-out;
     }
     div.stButton > button:hover {
         background-color: #3d6188;
         color: #ffffff;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
     }
 
     /* --- Inputs --- */
@@ -102,10 +106,11 @@ st.markdown("""
         border: 2px solid #3d6188 !important;
         padding: 8px !important;
         transition: all 0.3s ease-in-out;
+        animation: fadeSlide 0.8s ease-in-out;
     }
     textarea:focus, input:focus, .stTextInput>div>input:focus {
         border-color: #6b9bd1 !important;
-        box-shadow: 0 0 8px #6b9bd1;
+        box-shadow: 0 0 10px #6b9bd1;
     }
 
     /* --- Card styling --- */
@@ -115,10 +120,11 @@ st.markdown("""
         padding: 24px;
         margin: 16px 0;
         box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-        transition: all 0.3s ease-in-out;
+        transition: all 0.4s ease-in-out;
+        animation: fadeSlide 1s ease-in-out;
     }
     .card:hover {
-        transform: translateY(-4px);
+        transform: translateY(-4px) scale(1.02);
         box-shadow: 0 10px 28px rgba(0,0,0,0.25);
     }
     .card h3 {
@@ -132,6 +138,7 @@ st.markdown("""
         overflow: hidden;
         box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         transition: all 0.3s ease-in-out;
+        animation: fadeSlide 1s ease-in-out;
     }
     .feedback-table th {
         background-color: #3d6188 !important;
@@ -158,11 +165,18 @@ st.markdown("""
         padding: 14px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.12);
         text-align: center;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.4s ease-in-out;
+        animation: fadeSlide 1s ease-in-out;
     }
     .stMetric:hover {
-        transform: translateY(-3px);
+        transform: translateY(-3px) scale(1.03);
         box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* --- Animations --- */
+    @keyframes fadeSlide {
+        0% { opacity: 0; transform: translateY(15px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
 
     /* --- Remove footer --- */
