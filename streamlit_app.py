@@ -7,49 +7,37 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 # -----------------------------
-# Styling (Corporate Ocean Blue Theme)
+# Styling (Corporate Grey-Blue Theme)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #e3f2fd;  /* Very Light Blue */
-        color: #000000;             /* Black text */
+        background-color: #f3f3f4;  /* Light Grey */
+        color: #000000;
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #1565c0;  /* Deep Blue */
+        background-color: #3d6188;  /* Blue-Grey */
         padding: 14px 28px;
         border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-radius: 0px 0px 12px 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .header h1 {
         margin: 0;
-        color: #ffffff;  /* White text */
-    }
-
-    /* --- Logout button --- */
-    .logout-btn {
-        background:#ffffff;
-        color:#1565c0;
-        border:2px solid #1565c0;
-        padding:6px 14px;
-        border-radius:6px;
-        font-weight:600;
-        cursor:pointer;
-    }
-    .logout-btn:hover {
-        background:#1565c0;
-        color:#ffffff;
+        color: #ffffff;
+        font-weight: 700;
     }
 
     /* --- Sidebar --- */
     section[data-testid="stSidebar"] {
-        background-color: #1565c0;  /* Deep Blue */
+        background-color: #3d6188;
         color: #ffffff;
         padding-top: 28px;
     }
@@ -58,63 +46,84 @@ st.markdown("""
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
-        color: #1565c0 !important;  
+        color: #3d6188 !important;  
         padding: 12px 16px;
         border-radius: 10px;
         margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
-        transition: background 0.3s, transform 0.2s;
-        border: 2px solid #42a5f5;  /* Sky Blue border */
+        border: 2px solid #3d6188;
         text-align: center;
         width: 85% !important;
+        transition: background 0.3s, transform 0.2s;
     }
     div[role="radiogroup"] label:hover {
-        background: #42a5f5;
+        background: #3d6188;
         color: #ffffff !important;
         transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #1565c0 !important;  
+        background: #3d6188 !important;  
         color: #ffffff !important;
         border: 2px solid #ffffff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    /* --- Primary buttons --- */
+    /* --- Primary buttons (White with hover) --- */
     div.stButton > button {
-        background-color: #42a5f5;  /* Sky Blue */
-        color: #ffffff;
+        background-color: #ffffff;
+        color: #3d6188;
         border-radius: 8px;
         padding: 10px 18px;
         font-weight: 600;
-        border: none;
-        transition: background-color 0.2s, transform 0.2s;
+        border: 2px solid #3d6188;
+        transition: background-color 0.2s, transform 0.2s, color 0.2s;
         margin: 6px auto;
-        width: 200px;
     }
     div.stButton > button:hover {
-        background-color: #1565c0;
+        background-color: #3d6188;
+        color: #ffffff;
         transform: translateY(-2px);
     }
 
     /* --- Inputs --- */
     textarea, input, .stTextInput>div>input {
         border-radius: 8px !important;
-        border: 2px solid #42a5f5 !important;
+        border: 2px solid #3d6188 !important;
     }
 
     /* --- Headings --- */
     h1, h2, h3 {
-        color: #1565c0;
+        color: #3d6188;
+        font-weight: 700;
     }
 
-    /* --- Card --- */
+    /* --- Card / iframe holder --- */
     .iframe-card {
         background: #ffffff;
         border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        margin-bottom: 20px;
+    }
+
+    /* --- Feedback Table --- */
+    .feedback-table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .feedback-table th {
+        background-color: #3d6188 !important;
+        color: white !important;
+        font-weight: bold;
         padding: 10px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .feedback-table td {
+        padding: 10px;
+    }
+    .feedback-table tr:nth-child(even) {
+        background-color: #f9f9f9;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -243,7 +252,9 @@ elif page == "Feedback":
         st.markdown("---")
         st.subheader("📂 Previous Feedback")
         df = pd.read_csv("feedback.csv")
-        st.dataframe(df)
+        st.markdown('<div class="feedback-table">', unsafe_allow_html=True)
+        st.dataframe(df, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
         if st.button("🗑️ Erase All Feedback"):
             os.remove("feedback.csv")
