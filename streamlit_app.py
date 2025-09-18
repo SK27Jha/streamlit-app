@@ -8,13 +8,13 @@ st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 
 # -----------------------------
-# Global Styling (Fix Background + Buttons)
+# Global Styling (White Background + Light Gray Nav)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- Global App Background (ALL PAGES) --- */
     .stApp, .block-container, .stMarkdown, .stDataFrame, .stPlotlyChart, .stImage, .stTable {
-        background-color: #f3f3f4 !important;
+        background-color: #ffffff !important;
         color: #000000;
     }
 
@@ -67,7 +67,7 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* --- Buttons (same everywhere) --- */
+    /* --- Buttons (consistent design) --- */
     div.stButton > button {
         background-color: #ffffff !important;
         color: #000000 !important;
@@ -84,7 +84,7 @@ st.markdown("""
         transform: translateY(-2px);
     }
 
-    /* --- Card style --- */
+    /* --- Card style (for dashboard/iframe blocks) --- */
     .iframe-card {
         background: #ffffff !important;
         border-radius: 10px !important;
@@ -103,6 +103,7 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
