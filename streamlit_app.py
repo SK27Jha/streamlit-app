@@ -7,126 +7,111 @@ from datetime import datetime
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
 
-# Styling (Light Gray Theme)
+# -----------------------------
+# Styling (Full Screen Light Gray Layout)
 # -----------------------------
 st.markdown("""
 <style>
     /* --- App background --- */
     .stApp {
-        background-color: #f3f3f4;  /* Light Grey */
+        background-color: #f3f3f4;  
         color: #000000;
     }
 
     /* --- Top header style --- */
     .header {
-        background-color: #d6d6d6;  /* Light Gray */
+        background-color: #f3f3f4;  /* Same as background */
         padding: 14px 28px;
-        border-bottom: 2px solid #ffffff;
-        margin-bottom: 18px;
+        margin-bottom: 10px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-radius: 0px 0px 12px 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-bottom: 1px solid #d6d6d6;
     }
     .header h1 {
         margin: 0;
-        color: #000000; /* Black text on light header */
+        color: #000000;
         font-weight: 700;
     }
 
-    /* --- Sidebar --- */
+    /* --- Sidebar (Navigation) --- */
     section[data-testid="stSidebar"] {
-        background-color: #d6d6d6;  /* Light Gray */
+        background-color: #f3f3f4;  /* Match dashboard background */
         color: #000000;
-        padding-top: 28px;
+        padding: 0;
     }
 
-    /* --- Navigation buttons --- */
+    /* Make sidebar take full height like Streamlit official */
+    section[data-testid="stSidebar"] > div {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- Navigation buttons (radio) --- */
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
         color: #000000 !important;  
-        padding: 12px 16px;
-        border-radius: 10px;
-        margin: 8px 16px;
+        padding: 12px 18px;
+        border-radius: 8px;
+        margin: 6px 12px;
         font-weight: 600;
         cursor: pointer;
-        border: 2px solid #d6d6d6;
-        text-align: center;
-        width: 85% !important;
+        border: 1px solid #d6d6d6;
+        text-align: left;
+        width: auto !important;
         transition: background 0.3s, transform 0.2s, color 0.2s;
     }
     div[role="radiogroup"] label:hover {
-        background: #b0b0b0;
-        color: #ffffff !important;
-        transform: translateY(-2px);
+        background: #d6d6d6;
+        color: #000000 !important;
+        transform: translateX(3px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
-        background: #b0b0b0 !important;  
+        background: #3d6188 !important;  
         color: #ffffff !important;
-        border: 2px solid #ffffff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border: 1px solid #3d6188;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* --- Primary buttons (White with hover) --- */
+    /* --- Primary buttons (white with hover) --- */
     div.stButton > button {
         background-color: #ffffff;
         color: #000000;
-        border-radius: 8px;
+        border-radius: 6px;
         padding: 10px 18px;
         font-weight: 600;
-        border: 2px solid #b0b0b0;
+        border: 1px solid #3d6188;
         transition: background-color 0.2s, transform 0.2s, color 0.2s;
         margin: 6px auto;
     }
     div.stButton > button:hover {
-        background-color: #b0b0b0;
+        background-color: #3d6188;
         color: #ffffff;
         transform: translateY(-2px);
     }
 
-    /* --- Inputs --- */
-    textarea, input, .stTextInput>div>input {
-        border-radius: 8px !important;
-        border: 2px solid #b0b0b0 !important;
+    /* --- Main content full width --- */
+    .block-container {
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        max-width: 100%;
     }
 
-    /* --- Headings --- */
-    h1, h2, h3 {
-        color: #000000;
-        font-weight: 700;
-    }
-
-    /* --- Card / iframe holder --- */
+    /* --- Card --- */
     .iframe-card {
         background: #ffffff;
         border-radius: 10px;
         padding: 12px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        margin-bottom: 20px;
-    }
-
-    /* --- Feedback Table --- */
-    .feedback-table {
-        border-radius: 10px;
-        overflow: hidden;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .feedback-table th {
-        background-color: #b0b0b0 !important;
-        color: white !important;
-        font-weight: bold;
-        padding: 10px;
-    }
-    .feedback-table td {
-        padding: 10px;
-    }
-    .feedback-table tr:nth-child(even) {
-        background-color: #f9f9f9;
+        margin-bottom: 20px;
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 # -----------------------------
 # Session state for login/logout
