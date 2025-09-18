@@ -9,13 +9,18 @@ st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide
 # -----------------------------
 # Function for embedding Lottie animations
 # -----------------------------
-def lottie_embed(url, height=250):
+# -----------------------------
+# Function for embedding Lottie animations (fixed)
+# -----------------------------
+def lottie_embed(url, height=250, key=None):
     components.html(f"""
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <lottie-player src="{url}" background="transparent" 
-                   speed="1" style="width:100%;height:{height}px;" 
+                   speed="1" style="width:100%;height:{height}px;display:block;margin:auto;" 
                    loop autoplay>
     </lottie-player>
+    """, height=height+30)  # +30 to avoid clipping
+
     """, height=height)
 
 # -----------------------------
@@ -124,9 +129,12 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # Animation
-    lottie_embed("https://assets4.lottiefiles.com/packages/lf20_sF5S5j.json", height=250)
+    # Dashboard Animation (separated from card for clean rendering)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    lottie_embed("https://assets4.lottiefiles.com/packages/lf20_sF5S5j.json", height=220)
+    st.markdown("</div>", unsafe_allow_html=True)
 
+    # Power BI iframe inside a card
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
         <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
@@ -134,6 +142,7 @@ elif page == "📊 Dashboard":
         frameborder="0" allowFullScreen="true"></iframe>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
 
 elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
@@ -218,7 +227,7 @@ elif page == "ℹ️ About":
 
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
-    lottie_embed("https://assets1.lottiefiles.com/private_files/lf30_tjcwuzpm.json", height=180)
+    lottie_embed("https://assets1.lottiefiles.com/private_files/lf30_tjcwuzpm.json", height=160)
 
     with st.form("feedback_form", clear_on_submit=True):
         feedback = st.text_area("Your feedback")
@@ -241,23 +250,14 @@ elif page == "📝 Feedback":
                     df = df_new
 
                 df.to_csv("feedback.csv", index=False)
+
+                # 🎉 Success animation always stays visible
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
-                lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=200)
+                st.markdown('<div class="card">', unsafe_allow_html=True)
+                lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=220)
+                st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
 
-    if os.path.exists("feedback.csv"):
-        st.markdown("---")
-        st.subheader("📂 Previous Feedback")
-        df = pd.read_csv("feedback.csv")
-        st.markdown('<div class="feedback-table">', unsafe_allow_html=True)
-        st.dataframe(df, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
 
-        avg_rating = df["Rating"].mean()
-        st.metric("⭐ Average Rating", f"{avg_rating:.2f} / 5")
-
-        if st.button("🗑️ Erase All Feedback"):
-            os.remove("feedback.csv")
-            st.warning("⚠️ All feedback has been erased.")
-            st.rerun()
+    
