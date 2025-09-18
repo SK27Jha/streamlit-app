@@ -302,7 +302,7 @@ elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("🌍 Global Balance – Income Inequality Dashboard")
+    st.subheader("🌍 Global  Income Inequality Dashboard")
     st.write("""
     This project is designed to **analyze and visualize global income inequality**.  
     It combines interactive dashboards with powerful analytics to highlight inequality patterns.  
