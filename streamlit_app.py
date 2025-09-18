@@ -6,105 +6,128 @@ from datetime import datetime
 
 st.set_page_config(page_title="Global Balance Dashboard", layout="wide")
 
-
 # -----------------------------
-# Global Styling (White Background + Light Gray Nav)
+# Styling (White Background + Light Gray Nav)
 # -----------------------------
 st.markdown("""
 <style>
-    /* --- Global App Background (ALL PAGES) --- */
-    .stApp, .block-container, .stMarkdown, .stDataFrame, .stPlotlyChart, .stImage, .stTable {
+    /* --- Global App Background (ALL PAGES, including Dashboard) --- */
+    .stApp, .block-container {
         background-color: #ffffff !important;
         color: #000000;
+    }
+
+    /* --- Top header style --- */
+    .header {
+        background-color: #f3f3f4;  /* Light Gray */
+        padding: 14px 28px;
+        border-bottom: 1px solid #d6d6d6;
+        margin-bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0px 0px 12px 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+        margin: 0;
+        color: #000000;  /* Black text */
+        font-weight: 700;
     }
 
     /* --- Sidebar (Navigation) --- */
     section[data-testid="stSidebar"] {
-        background-color: #f3f3f4 !important;
-        padding-top: 1rem;
+        background-color: #f3f3f4 !important;  /* Light Gray */
+        color: #000000 !important;
+        padding-top: 28px;
     }
 
-    /* --- Top header --- */
-    .header {
-        background-color: #f3f3f4 !important;
-        padding: 14px 28px;
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #d6d6d6;
-    }
-    .header h1 {
-        margin: 0;
-        color: #000000;
-        font-weight: 700;
-    }
-
-    /* --- Navigation buttons (radio in sidebar) --- */
+    /* --- Navigation buttons --- */
     div[role="radiogroup"] label {
         display: block;
         background: #ffffff;        
         color: #000000 !important;  
-        padding: 12px 18px;
-        border-radius: 8px;
-        margin: 6px 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin: 8px 16px;
         font-weight: 600;
         cursor: pointer;
         border: 1px solid #d6d6d6;
-        text-align: left;
-        width: auto !important;
-        transition: background 0.3s, transform 0.2s, color 0.2s;
+        text-align: center;
+        width: 85% !important;
+        transition: background 0.3s, transform 0.2s;
     }
     div[role="radiogroup"] label:hover {
-        background: #e1e1e1;
-        color: #000000 !important;
-        transform: translateX(3px);
+        background: #3d6188;
+        color: #ffffff !important;
+        transform: translateY(-2px);
     }
     div[role="radiogroup"] label[aria-checked="true"] {
         background: #3d6188 !important;  
         color: #ffffff !important;
-        border: 1px solid #3d6188;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    /* --- Buttons (consistent design) --- */
+    /* --- Primary buttons (White with hover Blue-Grey) --- */
     div.stButton > button {
-        background-color: #ffffff !important;
-        color: #000000 !important;
-        border-radius: 6px !important;
-        padding: 10px 20px !important;
-        font-weight: 600 !important;
-        border: 1px solid #3d6188 !important;
-        margin: 10px 0 !important;
-        transition: background-color 0.3s, transform 0.2s, color 0.2s;
+        background-color: #ffffff;
+        color: #3d6188;
+        border-radius: 8px;
+        padding: 10px 18px;
+        font-weight: 600;
+        border: 2px solid #3d6188;
+        transition: background-color 0.2s, transform 0.2s, color 0.2s;
+        margin: 6px auto;
     }
     div.stButton > button:hover {
-        background-color: #3d6188 !important;
-        color: #ffffff !important;
+        background-color: #3d6188;
+        color: #ffffff;
         transform: translateY(-2px);
     }
 
-    /* --- Card style (for dashboard/iframe blocks) --- */
-    .iframe-card {
+    /* --- Inputs --- */
+    textarea, input, .stTextInput>div>input {
+        border-radius: 8px !important;
+        border: 1px solid #d6d6d6 !important;
         background: #ffffff !important;
-        border-radius: 10px !important;
-        padding: 14px !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-        margin-bottom: 20px !important;
     }
 
-    /* --- Full screen layout --- */
-    .block-container {
-        padding-top: 0rem !important;
-        padding-bottom: 0rem !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-        max-width: 100% !important;
+    /* --- Headings --- */
+    h1, h2, h3 {
+        color: #3d6188;
+        font-weight: 700;
+    }
+
+    /* --- Card / iframe holder --- */
+    .iframe-card {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    /* --- Feedback Table --- */
+    .feedback-table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .feedback-table th {
+        background-color: #3d6188 !important;
+        color: white !important;
+        font-weight: bold;
+        padding: 10px;
+    }
+    .feedback-table td {
+        padding: 10px;
+    }
+    .feedback-table tr:nth-child(even) {
+        background-color: #f9f9f9;
     }
 </style>
 """, unsafe_allow_html=True)
-
-
 
 
 # -----------------------------
