@@ -17,25 +17,10 @@ st.markdown("""
         color: #000000;
     }
 
-    /* --- Top Global Dashboard Header --- */
-    .main-header {
-        background-color: #ffffff;  /* White background */
-        padding: 20px;
-        text-align: center;
-        border-bottom: 2px solid #d3d3d3;
-        margin-bottom: 10px;
-    }
-    .main-header h1 {
-        margin: 0;
-        font-weight: 800;
-        font-size: 40px;
-        color: #3d6188;
-    }
-
     /* --- Top navigation header --- */
     .header {
         background-color: #d3d3d3;  /* Light Gray */
-        padding: 14px 28px;
+        padding: 16px 28px;
         border-bottom: 2px solid #ffffff;
         margin-bottom: 18px;
         display: flex;
@@ -44,10 +29,11 @@ st.markdown("""
         border-radius: 0px 0px 12px 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
-    .header h2 {
+    .header h1 {
         margin: 0;
         color: #3d6188;
-        font-weight: 700;
+        font-weight: 800;
+        font-size: 34px;
     }
 
     /* --- Sidebar --- */
@@ -150,31 +136,22 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 # -----------------------------
-# Main Header (Global Dashboard)
-# -----------------------------
-st.markdown("""
-<div class="main-header">
-    <h1>🌍 Global Dashboard</h1>
-</div>
-""", unsafe_allow_html=True)
-
-# -----------------------------
 # Sidebar Nav
 # -----------------------------
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Login", "Dashboard", "Insight", "About", "Feedback"])
 
 # -----------------------------
-# Header (Navigation Header)
+# Header (Global Balance)
 # -----------------------------
 st.markdown(f"""
 <div class="header">
-  <h2>Global Balance</h2>
+  <h1>🌍 Global Balance</h1>
 </div>
 """, unsafe_allow_html=True)
 
 # -----------------------------
-# Pages (Same as before)
+# Pages
 # -----------------------------
 if page == "Login":
     st.markdown("## 🔑 Login Page")
