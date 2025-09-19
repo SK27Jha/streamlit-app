@@ -113,13 +113,8 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # Try the team-analytics animation you mentioned
-    try:
-        lottie_embed("https://lottie.host/80a22146-2997-4286-8966-22a76f77242d/QdEZ5fV2tM.json", height=280)
-    except Exception as e:
-        st.write("⚠️ Animation failed to load. Showing fallback.")
-        # fallback animation (one we know works)
-        lottie_embed("https://lottie.host/ea0b15f3-7d47-4ac1-84ad-1f2a61d8b8e1/zXgPZbWqzM.json", height=280)
+    # ✅ Professional Data Analysis Animation (confirmed working)
+    lottie_embed("https://lottie.host/ea0b15f3-7d47-4ac1-84ad-1f2a61d8b8e1/zXgPZbWqzM.json", height=280)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
@@ -128,6 +123,7 @@ elif page == "📊 Dashboard":
         frameborder="0" allowFullScreen="true"></iframe>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 elif page == "🔎 Insight":
