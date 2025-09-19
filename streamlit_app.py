@@ -94,9 +94,9 @@ elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    csv_path = r"C:\Users\ASUS\Downloads\global_income_inequality.csv"
-if os.path.exists(csv_path):
-    df = pd.read_csv(csv_path)
+        csv_path = r"C:\Users\ASUS\Downloads\global_income_inequality.csv"
+         if os.path.exists(csv_path):
+         df = pd.read_csv(csv_path)
 
         st.markdown("### 📊 Raw Data Preview")
         st.dataframe(df)
