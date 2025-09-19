@@ -46,31 +46,30 @@ pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 
 page = st.sidebar.radio("Go to", pages)
 
 # -----------------------------
-# Login Page
+# Login Page with Top-Right Logout
 # -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)
 
-    # Initialize login state
+    # Initialize session state
     if 'logged_in' not in st.session_state:
         st.session_state['logged_in'] = False
         st.session_state['username'] = ""
 
-    # Top row for Logout button (if logged in)
-    col_left, col_right = st.columns([8,2])  # Left: empty, Right: Logout button
+    # Top bar: Logout button in right corner if logged in
+    col_left, col_right = st.columns([9,1])
     if st.session_state['logged_in']:
         with col_right:
             if st.button("Logout"):
                 st.session_state['logged_in'] = False
                 st.session_state['username'] = ""
-                st.experimental_rerun()
+                st.experimental_rerun()  # Refresh page
 
-    # Login form if not logged in
+    # Show login form only if not logged in
     if not st.session_state['logged_in']:
         username = st.text_input("👤 Username")
         password = st.text_input("🔒 Password", type="password")
-
         if st.button("Login"):
             if username.strip() and password.strip():
                 st.session_state['logged_in'] = True
@@ -81,6 +80,7 @@ if page == "🔑 Login":
                 st.error("⚠️ Please enter both username and password.")
     else:
         st.success(f"✅ Logged in as **{st.session_state['username']}**")
+
 
 
 # -----------------------------
