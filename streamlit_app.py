@@ -90,36 +90,49 @@ elif page == "📊 Dashboard":
 elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📌 Key Observations")
+    st.write("""
+    - Countries with **higher Gini Index** show **greater inequality**.  
+    - Developed nations often have **lower inequality** but slower improvement.  
+    - Developing countries display **wider income gaps** due to uneven distribution.  
+    - Population growth in some regions correlates with **higher inequality trends**.  
+    - Wealth concentration is highest in the **top 10%**, especially in emerging markets.  
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # ✅ Default dataset path
-    data_path = "global_inequality_data.xlsx"  # <-- yahan aap apna dataset rakho
-    uploaded_file = st.file_uploader("📂 Upload Excel/CSV file", type=["xlsx", "csv"])
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("💡 Why It Matters")
+    st.write("""
+    Understanding income inequality helps policymakers, researchers, and organizations  
+    design **targeted solutions** for inclusive growth and sustainable development.
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # File handling
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📊 Dataset Insights")
+
+    csv_path = "a4763003-e63f-4c5f-a0ae-500467ce4b8c.csv"
+    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+
     if uploaded_file is not None:
-        if uploaded_file.name.endswith(".xlsx"):
-            df_insight = pd.read_excel(uploaded_file)
-        else:
-            df_insight = pd.read_csv(uploaded_file)
-        st.success("✅ File uploaded successfully!")
-    elif os.path.exists(data_path):
-        if data_path.endswith(".xlsx"):
-            df_insight = pd.read_excel(data_path)
-        else:
-            df_insight = pd.read_csv(data_path)
-        st.info(f"📂 Loaded default dataset: {data_path}")
+        df_insight = pd.read_csv(uploaded_file)
+        st.success("✅ CSV uploaded successfully!")
+    elif os.path.exists(csv_path):
+        df_insight = pd.read_csv(csv_path)
+        st.info(f"⚠️ Loaded local CSV: {csv_path}")
     else:
-        st.warning("⚠️ No dataset found. Please upload a file.")
+        st.warning("⚠️ No CSV found. Please upload a CSV to view dataset insights.")
         df_insight = None
 
-    # ✅ Show Data + Metrics
     if df_insight is not None:
         st.dataframe(df_insight, use_container_width=True)
         st.markdown("---")
-        st.write("### 📊 Summary Metrics")
-
+        st.write("### 📈 Summary Metrics")
         for col in df_insight.select_dtypes(include=['int64', 'float64']).columns:
             st.metric(f"{col} Average", f"{df_insight[col].mean():.2f}")
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 
