@@ -76,7 +76,7 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # Animation (team analyzing data)
+    # Professional animation
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=280)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -94,14 +94,28 @@ elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    if os.path.exists("global_inequality_data.csv"):
-        df = pd.read_csv("global_inequality_data.csv")
-        st.dataframe(df)
+    # ✅ Directly read your provided CSV file
+    df = pd.read_csv("global_inequality_data.csv")
 
-        st.markdown("### 📊 Country-wise Income Inequality")
-        st.bar_chart(df.set_index("Country")["Gini Index"])
-    else:
-        st.error("⚠️ CSV file `global_inequality_data.csv` not found!")
+    st.markdown("### 📊 Raw Data Preview")
+    st.dataframe(df)
+
+    # Bar Chart
+    st.markdown("### 📊 Country-wise Gini Index")
+    st.bar_chart(df.set_index("Country")["Gini Index"])
+
+    # Line Chart (if Year column exists)
+    if "Year" in df.columns:
+        st.markdown("### 📈 Gini Index Trend Over Years")
+        st.line_chart(df.groupby("Year")["Gini Index"].mean())
+
+    # Analysis
+    st.markdown("### 🔎 Quick Analysis")
+    st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
+    st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
+    st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
+    st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
+
 
 # -----------------------------
 # About Page
@@ -111,13 +125,24 @@ elif page == "ℹ️ About":
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_kyu7xb1v.json", height=220)
 
     st.markdown("""
-    This dashboard provides **insights into global income inequality**  
+    This project provides **insights into global income inequality**  
     using **Gini Index, data visualization, and interactive analysis**.
 
-    **Key Features:**
-    - 📊 Interactive Power BI Dashboard  
-    - 📈 Country-wise Inequality Data  
-    - 📝 Feedback Collection for Improvements  
+    ### 🎯 Objectives:
+    - Track and analyze **income distribution across countries**
+    - Provide **interactive dashboards** using Power BI
+    - Highlight regions with **extreme inequality**
+    - Gather **feedback for continuous improvement**
+
+    ### 🛠 Methodology:
+    - Data Cleaning & Preprocessing (CSV datasets)
+    - Exploratory Data Analysis (EDA) using Python
+    - Dashboard integration with **Power BI**
+    - User feedback integration for better insights
+
+    ### 🌍 Why It Matters?
+    Income inequality affects **social stability, economic growth, and global development**.  
+    This dashboard aims to make inequality **easy to understand and act upon**.
     """)
 
 # -----------------------------
