@@ -51,30 +51,29 @@ st.sidebar.title("📌 Navigation")
 pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
 page = st.sidebar.radio("Go to", pages)
 
-# -----------------------------
-# Login Page
-# -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)  # login animation
 
     if st.session_state.logged_in:
-        if st.button("🚪 Logout"):
+        if st.button("🚪 Logout", key="logout_btn"):
             st.session_state.logged_in = False
             st.success("✅ Logged out successfully!")
-            st.experimental_rerun()
-    else:
+            st.rerun()
+
+    if not st.session_state.logged_in:
         username = st.text_input("Enter Username")
         password = st.text_input("Enter Password", type="password")
         if st.button("Login"):
             if username == "admin" and password == "1234":
                 st.session_state.logged_in = True
                 st.success("✅ Login Successful!")
-                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)
-                st.experimental_rerun()
+                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)  # success animation
+                st.rerun()
             else:
                 st.error("❌ Invalid Username or Password")
-
+    else:
+        st.success("✅ You are already logged in.")
 # -----------------------------
 # Dashboard Page
 # -----------------------------
@@ -89,7 +88,7 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=280)
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=250)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
@@ -185,6 +184,6 @@ elif page == "📝 Feedback":
                 df_combined.to_csv("feedback.csv", index=False)
                 
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
-                lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=250)
+                
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
