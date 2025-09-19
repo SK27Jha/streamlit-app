@@ -46,7 +46,7 @@ pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 
 page = st.sidebar.radio("Go to", pages)
 
 # -----------------------------
-# Login Page with Top-Right Logout
+# Login Page
 # -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
@@ -57,20 +57,21 @@ if page == "🔑 Login":
         st.session_state['logged_in'] = False
         st.session_state['username'] = ""
 
-    # Top bar: Logout button in right corner if logged in
-    col_left, col_right = st.columns([9,1])
+    # Top bar: Right logout button if logged in
     if st.session_state['logged_in']:
-        with col_right:
-            if st.button("Logout"):
+        col1, col2 = st.columns([9,1])
+        with col2:
+            # Using key to avoid Streamlit duplicate widget issue
+            if st.button("Logout", key="logout_btn"):
                 st.session_state['logged_in'] = False
                 st.session_state['username'] = ""
                 st.experimental_rerun()  # Refresh page
 
-    # Show login form only if not logged in
+    # Login form only if not logged in
     if not st.session_state['logged_in']:
         username = st.text_input("👤 Username")
         password = st.text_input("🔒 Password", type="password")
-        if st.button("Login"):
+        if st.button("Login", key="login_btn"):
             if username.strip() and password.strip():
                 st.session_state['logged_in'] = True
                 st.session_state['username'] = username
@@ -80,8 +81,6 @@ if page == "🔑 Login":
                 st.error("⚠️ Please enter both username and password.")
     else:
         st.success(f"✅ Logged in as **{st.session_state['username']}**")
-
-
 
 # -----------------------------
 # Dashboard Page
