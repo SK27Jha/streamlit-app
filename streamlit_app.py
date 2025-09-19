@@ -13,9 +13,9 @@ st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide
 def lottie_embed(url, height=250):
     components.html(f"""
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <lottie-player src="{url}" background="transparent" 
-                   speed="1" style="width:100%;height:{height}px;" 
-                   loop autoplay>
+    <lottie-player src="{url}" background="transparent"  
+                     speed="1" style="width:100%;height:{height}px;"  
+                     loop autoplay>
     </lottie-player>
     """, height=height)
 
@@ -114,7 +114,7 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # Professional Data Analysis Animation (team working on datasets)
+    # --- NEWLY ADDED ANIMATION ---
     lottie_embed("https://lottie.host/ea0b15f3-7d47-4ac1-84ad-1f2a61d8b8e1/zXgPZbWqzM.json", height=280)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
