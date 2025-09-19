@@ -113,17 +113,22 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # --- NEW ANIMATION ADDED AS PER YOUR REQUEST ---
-    # This animation shows a team working together on graphs and charts.
-    lottie_embed("https://lottie.host/80a22146-2997-4286-8966-22a76f77242d/QdEZ5fV2tM.json", height=280)
+    # Try the team-analytics animation you mentioned
+    try:
+        lottie_embed("https://lottie.host/80a22146-2997-4286-8966-22a76f77242d/QdEZ5fV2tM.json", height=280)
+    except Exception as e:
+        st.write("⚠️ Animation failed to load. Showing fallback.")
+        # fallback animation (one we know works)
+        lottie_embed("https://lottie.host/ea0b15f3-7d47-4ac1-84ad-1f2a61d8b8e1/zXgPZbWqzM.json", height=280)
 
-    # Power BI dashboard without the card container for a more fluid, non-fixed feel
+    st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
-        <iframe title="Global Income Inequality Dashboard" width="100%" height="700"
+        <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
         src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9"
-        frameborder="0" allowFullScreen="true"
-        style="border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); margin-top: 24px; border: none;"></iframe>
+        frameborder="0" allowFullScreen="true"></iframe>
     """, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
 elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
