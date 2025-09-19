@@ -10,6 +10,12 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide")
 
 # -----------------------------
+# Initialize session state
+# -----------------------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+# -----------------------------
 # Function for embedding Lottie animations
 # -----------------------------
 def lottie_embed(url, height=250):
@@ -45,29 +51,29 @@ st.sidebar.title("📌 Navigation")
 pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
 page = st.sidebar.radio("Go to", pages)
 
+# -----------------------------
+# Login Page
+# -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)  # login animation
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)
 
     if st.session_state.logged_in:
-        if st.button("🚪 Logout", key="logout_btn"):
+        if st.button("🚪 Logout"):
             st.session_state.logged_in = False
             st.success("✅ Logged out successfully!")
-            st.rerun()
-
-    if not st.session_state.logged_in:
+            st.experimental_rerun()
+    else:
         username = st.text_input("Enter Username")
         password = st.text_input("Enter Password", type="password")
         if st.button("Login"):
             if username == "admin" and password == "1234":
                 st.session_state.logged_in = True
                 st.success("✅ Login Successful!")
-                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)  # success animation
-                st.rerun()
+                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)
+                st.experimental_rerun()
             else:
                 st.error("❌ Invalid Username or Password")
-    else:
-        st.success("✅ You are already logged in.")
 
 # -----------------------------
 # Dashboard Page
@@ -83,7 +89,6 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # Professional animation
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=280)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -102,24 +107,19 @@ elif page == "📈 Insights":
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
     uploaded_file = st.file_uploader("📂 Upload CSV file", type=["csv"])
-
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
-
         st.markdown("### 📊 Raw Data Preview")
         st.dataframe(df)
 
-        # Bar Chart
         if "Country" in df.columns and "Gini Index" in df.columns:
             st.markdown("### 📊 Country-wise Gini Index")
             st.bar_chart(df.set_index("Country")["Gini Index"])
 
-        # Line Chart (if Year column exists)
         if "Year" in df.columns:
             st.markdown("### 📈 Gini Index Trend Over Years")
             st.line_chart(df.groupby("Year")["Gini Index"].mean())
 
-        # Analysis
         st.markdown("### 🔎 Quick Analysis")
         st.write(f"✅ Number of countries: **{df['Country'].nunique()}**")
         st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
@@ -128,14 +128,12 @@ elif page == "📈 Insights":
     else:
         st.info("👆 Please upload a CSV file to see insights.")
 
-
 # -----------------------------
 # About Page
 # -----------------------------
 elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_kyu7xb1v.json", height=220)
-
     st.markdown("""
     This project provides **insights into global income inequality**  
     using **Gini Index, data visualization, and interactive analysis**.
@@ -157,11 +155,9 @@ elif page == "ℹ️ About":
     This dashboard aims to make inequality **easy to understand and act upon**.
     """)
 
-
-
-
-
-
+# -----------------------------
+# Feedback Page
+# -----------------------------
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=220)
@@ -182,18 +178,13 @@ elif page == "📝 Feedback":
 
                 if os.path.exists("feedback.csv"):
                     df_existing = pd.read_csv("feedback.csv")
-                    df = pd.concat([df_existing, df_new], ignore_index=True)
+                    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
                 else:
-                    df = df_new
+                    df_combined = df_new
 
-                df.to_csv("feedback.csv", index=False)
+                df_combined.to_csv("feedback.csv", index=False)
                 
-                # Success message
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
-
-                # 🎉 Thank You Animation
                 lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=250)
-
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
-
