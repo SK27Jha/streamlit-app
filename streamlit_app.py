@@ -113,11 +113,9 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # --- THIS IS THE ANIMATION YOU REQUESTED ---
-    # It shows a team of people analyzing graphs.
-    # If you want to try a different animation, replace the URL below with another one.
-    # Alternative URL: "https://assets10.lottiefiles.com/packages/lf20_q4h09qcf.json"
-    lottie_embed("https://lottie.host/ea0b15f3-7d47-4ac1-84ad-1f2a61d8b8e1/zXgPZbWqzM.json", height=280)
+    # --- NEW ANIMATION ADDED AS PER YOUR REQUEST ---
+    # This animation shows a team working together on graphs and charts.
+    lottie_embed("https://lottie.host/80a22146-2997-4286-8966-22a76f77242d/QdEZ5fV2tM.json", height=280)
 
     # Power BI dashboard without the card container for a more fluid, non-fixed feel
     st.markdown("""
