@@ -94,18 +94,18 @@ elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    # Use the uploaded CSV file
-    csv_path = "d488b9d8-6c7d-4438-acbd-2beee6a29d14.csv"   # uploaded file
+    uploaded_file = st.file_uploader("📂 Upload CSV file", type=["csv"])
 
-    try:
-        df = pd.read_csv(csv_path)
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
 
         st.markdown("### 📊 Raw Data Preview")
         st.dataframe(df)
 
         # Bar Chart
-        st.markdown("### 📊 Country-wise Gini Index")
-        st.bar_chart(df.set_index("Country")["Gini Index"])
+        if "Country" in df.columns and "Gini Index" in df.columns:
+            st.markdown("### 📊 Country-wise Gini Index")
+            st.bar_chart(df.set_index("Country")["Gini Index"])
 
         # Line Chart (if Year column exists)
         if "Year" in df.columns:
@@ -114,13 +114,12 @@ elif page == "📈 Insights":
 
         # Analysis
         st.markdown("### 🔎 Quick Analysis")
-        st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
+        st.write(f"✅ Number of countries: **{df['Country'].nunique()}**")
         st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
         st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
         st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
-
-    except Exception as e:
-        st.error(f"⚠️ Error loading CSV: {e}")
+    else:
+        st.info("👆 Please upload a CSV file to see insights.")
 
 
 # -----------------------------
