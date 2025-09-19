@@ -94,27 +94,42 @@ elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    # ✅ Directly read your provided CSV file
-    df = pd.read_csv("global_inequality_data.csv")
+    # ✅ Default Excel path
+    excel_path = "global_inequality_data.xlsx"
+    uploaded_file = st.file_uploader("📂 Upload your Excel file", type=["xlsx"])
 
-    st.markdown("### 📊 Raw Data Preview")
-    st.dataframe(df)
+    if uploaded_file is not None:
+        df = pd.read_excel(uploaded_file)
+        st.success("✅ Custom Excel uploaded successfully!")
+    elif os.path.exists(excel_path):
+        df = pd.read_excel(excel_path)
+        st.info(f"📂 Loaded default dataset: {excel_path}")
+    else:
+        st.error("⚠️ No dataset available. Please upload an Excel file.")
+        df = None
 
-    # Bar Chart
-    st.markdown("### 📊 Country-wise Gini Index")
-    st.bar_chart(df.set_index("Country")["Gini Index"])
+    if df is not None:
+        # Raw Data Preview
+        st.markdown("### 📊 Raw Data Preview")
+        st.dataframe(df)
 
-    # Line Chart (if Year column exists)
-    if "Year" in df.columns:
-        st.markdown("### 📈 Gini Index Trend Over Years")
-        st.line_chart(df.groupby("Year")["Gini Index"].mean())
+        # Bar Chart
+        if "Country" in df.columns and "Gini Index" in df.columns:
+            st.markdown("### 📊 Country-wise Gini Index")
+            st.bar_chart(df.set_index("Country")["Gini Index"])
 
-    # Analysis
-    st.markdown("### 🔎 Quick Analysis")
-    st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
-    st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
-    st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
-    st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
+        # Line Chart (if Year column exists)
+        if "Year" in df.columns:
+            st.markdown("### 📈 Gini Index Trend Over Years")
+            st.line_chart(df.groupby("Year")["Gini Index"].mean())
+
+        # Analysis
+        st.markdown("### 🔎 Quick Analysis")
+        if "Country" in df.columns and "Gini Index" in df.columns:
+            st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
+            st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
+            st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
+            st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
 
 
 # -----------------------------
