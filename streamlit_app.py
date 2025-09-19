@@ -206,7 +206,7 @@ elif page == "📊 Dashboard":
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
     # Professional animation
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=280)
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=200)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
@@ -279,9 +279,6 @@ elif page == "ℹ️ About":
     This dashboard aims to make inequality **easy to understand and act upon**.
     """)
 
-# -----------------------------
-# Feedback Page
-# -----------------------------
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=220)
@@ -307,7 +304,13 @@ elif page == "📝 Feedback":
                     df = df_new
 
                 df.to_csv("feedback.csv", index=False)
+                
+                # Success message
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
-                lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=200)
+
+                # 🎉 Thank You Animation
+                lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=250)
+
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
+
