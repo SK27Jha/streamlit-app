@@ -87,49 +87,40 @@ elif page == "📊 Dashboard":
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# -----------------------------
-# Insights Page
-# -----------------------------
-elif page == "📈 Insights":
-    st.markdown("## 📈 Data Insights")
-    lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
+elif page == "🔎 Insight":
+    st.markdown("## 🔎 Insights")
+    lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
 
-    # ✅ Default Excel path
-    excel_path = "global_inequality_data.xlsx"
-    uploaded_file = st.file_uploader("📂 Upload your Excel file", type=["xlsx"])
+    # ✅ Default dataset path
+    data_path = "global_inequality_data.xlsx"  # <-- yahan aap apna dataset rakho
+    uploaded_file = st.file_uploader("📂 Upload Excel/CSV file", type=["xlsx", "csv"])
 
+    # File handling
     if uploaded_file is not None:
-        df = pd.read_excel(uploaded_file)
-        st.success("✅ Custom Excel uploaded successfully!")
-    elif os.path.exists(excel_path):
-        df = pd.read_excel(excel_path)
-        st.info(f"📂 Loaded default dataset: {excel_path}")
+        if uploaded_file.name.endswith(".xlsx"):
+            df_insight = pd.read_excel(uploaded_file)
+        else:
+            df_insight = pd.read_csv(uploaded_file)
+        st.success("✅ File uploaded successfully!")
+    elif os.path.exists(data_path):
+        if data_path.endswith(".xlsx"):
+            df_insight = pd.read_excel(data_path)
+        else:
+            df_insight = pd.read_csv(data_path)
+        st.info(f"📂 Loaded default dataset: {data_path}")
     else:
-        st.error("⚠️ No dataset available. Please upload an Excel file.")
-        df = None
+        st.warning("⚠️ No dataset found. Please upload a file.")
+        df_insight = None
 
-    if df is not None:
-        # Raw Data Preview
-        st.markdown("### 📊 Raw Data Preview")
-        st.dataframe(df)
+    # ✅ Show Data + Metrics
+    if df_insight is not None:
+        st.dataframe(df_insight, use_container_width=True)
+        st.markdown("---")
+        st.write("### 📊 Summary Metrics")
 
-        # Bar Chart
-        if "Country" in df.columns and "Gini Index" in df.columns:
-            st.markdown("### 📊 Country-wise Gini Index")
-            st.bar_chart(df.set_index("Country")["Gini Index"])
+        for col in df_insight.select_dtypes(include=['int64', 'float64']).columns:
+            st.metric(f"{col} Average", f"{df_insight[col].mean():.2f}")
 
-        # Line Chart (if Year column exists)
-        if "Year" in df.columns:
-            st.markdown("### 📈 Gini Index Trend Over Years")
-            st.line_chart(df.groupby("Year")["Gini Index"].mean())
-
-        # Analysis
-        st.markdown("### 🔎 Quick Analysis")
-        if "Country" in df.columns and "Gini Index" in df.columns:
-            st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
-            st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
-            st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
-            st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
 
 
 # -----------------------------
