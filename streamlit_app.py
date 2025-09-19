@@ -52,15 +52,36 @@ if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)
 
-    username = st.text_input("👤 Username")
-    password = st.text_input("🔒 Password", type="password")
+    # Initialize login state
+    if 'logged_in' not in st.session_state:
+        st.session_state['logged_in'] = False
+        st.session_state['username'] = ""
 
-    if st.button("Login"):
-        if username.strip() and password.strip():
-            st.success(f"✅ Welcome, {username}!")
-            lottie_embed("https://assets1.lottiefiles.com/packages/lf20_q5pk6p1k.json", height=200)
-        else:
-            st.error("⚠️ Please enter both username and password.")
+    # Top row for Logout button (if logged in)
+    col_left, col_right = st.columns([8,2])  # Left: empty, Right: Logout button
+    if st.session_state['logged_in']:
+        with col_right:
+            if st.button("Logout"):
+                st.session_state['logged_in'] = False
+                st.session_state['username'] = ""
+                st.experimental_rerun()
+
+    # Login form if not logged in
+    if not st.session_state['logged_in']:
+        username = st.text_input("👤 Username")
+        password = st.text_input("🔒 Password", type="password")
+
+        if st.button("Login"):
+            if username.strip() and password.strip():
+                st.session_state['logged_in'] = True
+                st.session_state['username'] = username
+                st.success(f"✅ Welcome, {username}!")
+                lottie_embed("https://assets1.lottiefiles.com/packages/lf20_q5pk6p1k.json", height=200)
+            else:
+                st.error("⚠️ Please enter both username and password.")
+    else:
+        st.success(f"✅ Logged in as **{st.session_state['username']}**")
+
 
 # -----------------------------
 # Dashboard Page
