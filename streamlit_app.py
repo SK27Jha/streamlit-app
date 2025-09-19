@@ -87,19 +87,6 @@ elif page == "📊 Dashboard":
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# Add CSS for cards somewhere at top of app
-st.markdown("""
-<style>
-.card {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 15px;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # -----------------------------
 # Insights Page
 # -----------------------------
@@ -107,29 +94,14 @@ elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    # ✅ Default CSV path
-    csv_path = "global_inequality_data.csv"
-    uploaded_file = st.file_uploader("📂 Upload your CSV file", type=["csv"])
-
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        st.success("✅ Custom CSV uploaded successfully!")
-    elif os.path.exists(csv_path):
-        df = pd.read_csv(csv_path)
-        st.info(f"📂 Loaded default dataset: {csv_path}")
-    else:
-        st.error("⚠️ No dataset available. Please upload a CSV file.")
-        df = None
-
-    if df is not None:
-        # Raw Data Preview
+    if os.path.exists("global_inequality_data.csv"):
+        df = pd.read_csv("global_inequality_data.csv")
         st.markdown("### 📊 Raw Data Preview")
         st.dataframe(df)
 
         # Bar Chart
-        if "Country" in df.columns and "Gini Index" in df.columns:
-            st.markdown("### 📊 Country-wise Gini Index")
-            st.bar_chart(df.set_index("Country")["Gini Index"])
+        st.markdown("### 📊 Country-wise Gini Index")
+        st.bar_chart(df.set_index("Country")["Gini Index"])
 
         # Line Chart (if Year column exists)
         if "Year" in df.columns:
@@ -138,11 +110,13 @@ elif page == "📈 Insights":
 
         # Analysis
         st.markdown("### 🔎 Quick Analysis")
-        if "Country" in df.columns and "Gini Index" in df.columns:
-            st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
-            st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
-            st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
-            st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
+        st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
+        st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
+        st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
+        st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
+
+    else:
+        st.error("⚠️ CSV file `global_inequality_data.csv` not found!")
 
 # -----------------------------
 # About Page
