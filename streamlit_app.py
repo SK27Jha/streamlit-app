@@ -47,44 +47,27 @@ page = st.sidebar.radio("Go to", pages)
 
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)  # login animation
 
-    if 'logged_in' not in st.session_state:
-        st.session_state['logged_in'] = False
-        st.session_state['username'] = ""
+    if st.session_state.logged_in:
+        if st.button("🚪 Logout", key="logout_btn"):
+            st.session_state.logged_in = False
+            st.success("✅ Logged out successfully!")
+            st.rerun()
 
-    if 'rerun_flag' not in st.session_state:
-        st.session_state['rerun_flag'] = False
-
-    # Logout button top-right
-    if st.session_state['logged_in']:
-        col1, col2 = st.columns([9,1])
-        with col2:
-            logout_clicked = st.button("Logout", key="logout_btn")
-            if logout_clicked:
-                st.session_state['logged_in'] = False
-                st.session_state['username'] = ""
-                st.session_state['rerun_flag'] = True
-
-    # Trigger safe rerun
-    if st.session_state['rerun_flag']:
-        st.session_state['rerun_flag'] = False
-        st.experimental_rerun()
-
-    # Login form
-    if not st.session_state['logged_in']:
-        username = st.text_input("👤 Username")
-        password = st.text_input("🔒 Password", type="password")
-        if st.button("Login", key="login_btn"):
-            if username.strip() and password.strip():
-                st.session_state['logged_in'] = True
-                st.session_state['username'] = username
-                st.success(f"✅ Welcome, {username}!")
-                lottie_embed("https://assets1.lottiefiles.com/packages/lf20_q5pk6p1k.json", height=200)
+    if not st.session_state.logged_in:
+        username = st.text_input("Enter Username")
+        password = st.text_input("Enter Password", type="password")
+        if st.button("Login"):
+            if username == "admin" and password == "1234":
+                st.session_state.logged_in = True
+                st.success("✅ Login Successful!")
+                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)  # success animation
+                st.rerun()
             else:
-                st.error("⚠️ Please enter both username and password.")
+                st.error("❌ Invalid Username or Password")
     else:
-        st.success(f"✅ Logged in as **{st.session_state['username']}**")
+        st.success("✅ You are already logged in.")
 
 # -----------------------------
 # Dashboard Page
