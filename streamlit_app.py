@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import time
 from datetime import datetime
 import streamlit.components.v1 as components
 
@@ -19,56 +20,45 @@ def lottie_embed(url, height=250):
     """, height=height)
 
 # -----------------------------
-# Styling (White + Animations)
+# Styling
 # -----------------------------
 st.markdown("""
 <style>
-/* --- App background --- */
 .stApp { background-color: #ffffff; color: #000000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.5s ease-in-out; }
-/* --- Top navigation header --- */
 .header { background: linear-gradient(90deg, #3d6188, #6b9bd1); padding: 20px 28px; border-radius: 0px 0px 14px 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.25); color: white; transition: all 0.4s ease-in-out; animation: fadeSlide 1s ease-in-out; }
 .header:hover { transform: scale(1.02); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
 .header h1 { margin: 0; font-weight: 900; font-size: 36px; }
 .tagline { font-size: 18px; font-style: italic; margin-top: 6px; opacity: 0.9; }
-/* --- Sidebar --- */
 section[data-testid="stSidebar"] { background-color: #f8f9fa; color: #000000; padding-top: 28px; border-right: 2px solid #d3d3d3; }
 div[role="radiogroup"] label { display: block; background: #ffffff; color: #3d6188 !important; padding: 14px 18px; border-radius: 12px; margin: 10px 16px; font-weight: 600; cursor: pointer; border: 2px solid #3d6188; text-align: center; width: 85% !important; transition: all 0.4s ease-in-out; animation: fadeSlide 0.8s ease-in-out; }
 div[role="radiogroup"] label:hover { background: #3d6188; color: #ffffff !important; transform: translateY(-3px) scale(1.02); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
 div[role="radiogroup"] label[aria-checked="true"] { background: #3d6188 !important; color: #ffffff !important; border-left: 6px solid #ff6f61; box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
-/* --- Buttons --- */
 div.stButton > button { background-color: #ffffff; color: #3d6188; border-radius: 10px; padding: 10px 20px; font-weight: 700; border: 2px solid #3d6188; transition: all 0.4s ease-in-out; margin: 8px auto; display: block; animation: fadeSlide 1s ease-in-out; }
 div.stButton > button:hover { background-color: #3d6188; color: #ffffff; transform: translateY(-4px) scale(1.05); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
-/* --- Inputs --- */
 textarea, input, .stTextInput>div>input { border-radius: 10px !important; border: 2px solid #3d6188 !important; padding: 8px !important; transition: all 0.3s ease-in-out; animation: fadeSlide 0.8s ease-in-out; }
 textarea:focus, input:focus, .stTextInput>div>input:focus { border-color: #6b9bd1 !important; box-shadow: 0 0 10px #6b9bd1; }
-/* --- Card styling --- */
 .card { background: #ffffff; border-radius: 14px; padding: 24px; margin: 16px 0; box-shadow: 0 6px 20px rgba(0,0,0,0.12); transition: all 0.4s ease-in-out; animation: fadeSlide 1s ease-in-out; }
 .card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 10px 28px rgba(0,0,0,0.25); }
-.card h3 { margin-top: 0; color: #3d6188; }
-/* --- Feedback Table --- */
 .feedback-table { border-radius: 12px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.12); transition: all 0.3s ease-in-out; animation: fadeSlide 1s ease-in-out; }
 .feedback-table th { background-color: #3d6188 !important; color: white !important; font-weight: bold; padding: 12px; }
 .feedback-table td { padding: 10px; transition: all 0.2s ease-in-out; }
 .feedback-table tr:nth-child(even) { background-color: #f2f2f2; }
 .feedback-table tr:hover td { background-color: #dce6f1; transform: scale(1.01); }
-/* --- Metrics --- */
 .stMetric { background: #ffffff; border-radius: 12px; padding: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); text-align: center; transition: all 0.4s ease-in-out; animation: fadeSlide 1s ease-in-out; }
 .stMetric:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
-/* --- Animations --- */
 @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
-/* --- Remove footer --- */
 #MainMenu, footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
 # -----------------------------
-# Session state for login/logout
+# Session state
 # -----------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 # -----------------------------
-# Sidebar Nav
+# Sidebar Navigation
 # -----------------------------
 st.sidebar.title("🌍 Navigation")
 page = st.sidebar.radio(
@@ -124,8 +114,8 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # Animation
-    lottie_embed("https://assets4.lottiefiles.com/packages/lf20_sF5S5j.json", height=250)
+    # Professional Data Analysis Animation (team working on datasets)
+    lottie_embed("https://lottie.host/ea0b15f3-7d47-4ac1-84ad-1f2a61d8b8e1/zXgPZbWqzM.json", height=280)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
@@ -139,7 +129,7 @@ elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
 
-    # Key Observations Card
+    # Observations
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📌 Key Observations")
     st.write("""
@@ -151,7 +141,7 @@ elif page == "🔎 Insight":
     """)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Why It Matters Card
+    # Why it Matters
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("💡 Why It Matters")
     st.write("""
@@ -160,11 +150,11 @@ elif page == "🔎 Insight":
     """)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ---- Dataset Insights ----
+    # Dataset Insights
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📊 Dataset Insights")
 
-    csv_path = "a4763003-e63f-4c5f-a0ae-500467ce4b8c.csv"  # place CSV in same folder as app
+    csv_path = "a4763003-e63f-4c5f-a0ae-500467ce4b8c.csv"
     uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
     if uploaded_file is not None:
@@ -191,7 +181,7 @@ elif page == "ℹ️ About":
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_xlmz9xwm.json", height=220)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("🌍 Global  Income Inequality Dashboard")
+    st.subheader("🌍 Global Income Inequality Dashboard")
     st.write("""
     This project is designed to **analyze and visualize global income inequality**.  
     It combines interactive dashboards with powerful analytics to highlight inequality patterns.  
@@ -261,4 +251,3 @@ elif page == "📝 Feedback":
             os.remove("feedback.csv")
             st.warning("⚠️ All feedback has been erased.")
             st.rerun()
-
