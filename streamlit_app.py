@@ -45,53 +45,6 @@ st.sidebar.title("📌 Navigation")
 pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
 page = st.sidebar.radio("Go to", pages)
 
-import streamlit as st
-import pandas as pd
-import os
-from datetime import datetime
-import streamlit.components.v1 as components
-
-# -----------------------------
-# Page Config
-# -----------------------------
-st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide")
-
-# -----------------------------
-# Function for embedding Lottie animations
-# -----------------------------
-def lottie_embed(url, height=250):
-    components.html(f"""
-        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-        <lottie-player src="{url}" background="transparent" speed="1" style="height: {height}px; margin: auto;" loop autoplay></lottie-player>
-    """, height=height+50)
-
-# -----------------------------
-# Styling (White + Light Gray Theme)
-# -----------------------------
-st.markdown("""
-<style>
-    .stApp {
-        background-color: #ffffff;  
-        color: #000000;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .card {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# -----------------------------
-# Sidebar Navigation
-# -----------------------------
-st.sidebar.title("📌 Navigation")
-pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
-page = st.sidebar.radio("Go to", pages)
-
 # -----------------------------
 # Login Page
 # -----------------------------
