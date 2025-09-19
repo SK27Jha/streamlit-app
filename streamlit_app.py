@@ -45,29 +45,33 @@ st.sidebar.title("📌 Navigation")
 pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
 page = st.sidebar.radio("Go to", pages)
 
-# -----------------------------
-# Login Page
-# -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_touohxv0.json", height=220)
 
-    # Initialize session state
     if 'logged_in' not in st.session_state:
         st.session_state['logged_in'] = False
         st.session_state['username'] = ""
 
-    # Top bar: Right logout button if logged in
+    if 'rerun_flag' not in st.session_state:
+        st.session_state['rerun_flag'] = False
+
+    # Logout button top-right
     if st.session_state['logged_in']:
         col1, col2 = st.columns([9,1])
         with col2:
-            # Using key to avoid Streamlit duplicate widget issue
-            if st.button("Logout", key="logout_btn"):
+            logout_clicked = st.button("Logout", key="logout_btn")
+            if logout_clicked:
                 st.session_state['logged_in'] = False
                 st.session_state['username'] = ""
-                st.experimental_rerun()  # Refresh page
+                st.session_state['rerun_flag'] = True
 
-    # Login form only if not logged in
+    # Trigger safe rerun
+    if st.session_state['rerun_flag']:
+        st.session_state['rerun_flag'] = False
+        st.experimental_rerun()
+
+    # Login form
     if not st.session_state['logged_in']:
         username = st.text_input("👤 Username")
         password = st.text_input("🔒 Password", type="password")
