@@ -89,7 +89,11 @@ elif page == "📊 Dashboard":
 
 elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
+    
+    # Lottie animation
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
+    
+    # Key Observations
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📌 Key Observations")
     st.write("""
@@ -100,7 +104,8 @@ elif page == "🔎 Insight":
     - Wealth concentration is highest in the **top 10%**, especially in emerging markets.  
     """)
     st.markdown('</div>', unsafe_allow_html=True)
-
+    
+    # Why it matters
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("💡 Why It Matters")
     st.write("""
@@ -108,14 +113,18 @@ elif page == "🔎 Insight":
     design **targeted solutions** for inclusive growth and sustainable development.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
-
+    
+    # Dataset Insights
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📊 Dataset Insights")
 
     csv_path = "a4763003-e63f-4c5f-a0ae-500467ce4b8c.csv"
-    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+    df_insight = None
 
-    if uploaded_file is not None:
+    # Upload option (overrides local CSV)
+    uploaded_file = st.file_uploader("Upload CSV file (optional)", type=["csv"])
+    
+    if uploaded_file:
         df_insight = pd.read_csv(uploaded_file)
         st.success("✅ CSV uploaded successfully!")
     elif os.path.exists(csv_path):
@@ -123,18 +132,19 @@ elif page == "🔎 Insight":
         st.info(f"⚠️ Loaded local CSV: {csv_path}")
     else:
         st.warning("⚠️ No CSV found. Please upload a CSV to view dataset insights.")
-        df_insight = None
 
     if df_insight is not None:
         st.dataframe(df_insight, use_container_width=True)
         st.markdown("---")
         st.write("### 📈 Summary Metrics")
-        for col in df_insight.select_dtypes(include=['int64', 'float64']).columns:
-            st.metric(f"{col} Average", f"{df_insight[col].mean():.2f}")
-
+        numeric_cols = df_insight.select_dtypes(include=['int64', 'float64']).columns
+        if numeric_cols.any():
+            for col in numeric_cols:
+                st.metric(f"{col} Average", f"{df_insight[col].mean():.2f}")
+        else:
+            st.info("No numeric columns to display metrics.")
+    
     st.markdown('</div>', unsafe_allow_html=True)
-
-
 
 # -----------------------------
 # About Page
