@@ -87,12 +87,23 @@ elif page == "📊 Dashboard":
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+# Add CSS for cards somewhere at top of app
+st.markdown("""
+<style>
+.card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
-    
-    # Lottie animation
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
-    
+
     # Key Observations
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📌 Key Observations")
@@ -104,7 +115,7 @@ elif page == "🔎 Insight":
     - Wealth concentration is highest in the **top 10%**, especially in emerging markets.  
     """)
     st.markdown('</div>', unsafe_allow_html=True)
-    
+
     # Why it matters
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("💡 Why It Matters")
@@ -113,37 +124,40 @@ elif page == "🔎 Insight":
     design **targeted solutions** for inclusive growth and sustainable development.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
-    
+
     # Dataset Insights
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📊 Dataset Insights")
 
     csv_path = "a4763003-e63f-4c5f-a0ae-500467ce4b8c.csv"
-    df_insight = None
 
-    # Upload option (overrides local CSV)
+    # Upload option
     uploaded_file = st.file_uploader("Upload CSV file (optional)", type=["csv"])
     
     if uploaded_file:
         df_insight = pd.read_csv(uploaded_file)
+        st.session_state['df_insight'] = df_insight
         st.success("✅ CSV uploaded successfully!")
+    elif 'df_insight' in st.session_state:
+        df_insight = st.session_state['df_insight']
     elif os.path.exists(csv_path):
         df_insight = pd.read_csv(csv_path)
+        st.session_state['df_insight'] = df_insight
         st.info(f"⚠️ Loaded local CSV: {csv_path}")
     else:
         st.warning("⚠️ No CSV found. Please upload a CSV to view dataset insights.")
+        df_insight = None
 
     if df_insight is not None:
         st.dataframe(df_insight, use_container_width=True)
         st.markdown("---")
         st.write("### 📈 Summary Metrics")
         numeric_cols = df_insight.select_dtypes(include=['int64', 'float64']).columns
-        if numeric_cols.any():
+        if len(numeric_cols) > 0:
             for col in numeric_cols:
                 st.metric(f"{col} Average", f"{df_insight[col].mean():.2f}")
         else:
             st.info("No numeric columns to display metrics.")
-    
     st.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------
