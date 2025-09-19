@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import os
-import time
 from datetime import datetime
 import streamlit.components.v1 as components
 
@@ -81,7 +80,7 @@ st.markdown(f"""
 # -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)  # login animation
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)
 
     if st.session_state.logged_in:
         if st.button("🚪 Logout", key="logout_btn"):
@@ -96,7 +95,7 @@ if page == "🔑 Login":
             if username == "admin" and password == "1234":
                 st.session_state.logged_in = True
                 st.success("✅ Login Successful!")
-                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)  # success animation
+                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)
                 st.rerun()
             else:
                 st.error("❌ Invalid Username or Password")
@@ -114,22 +113,24 @@ elif page == "📊 Dashboard":
     with col3:
         st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
 
-    # --- NEWLY ADDED ANIMATION ---
+    # --- THIS IS THE ANIMATION YOU REQUESTED ---
+    # It shows a team of people analyzing graphs.
+    # If you want to try a different animation, replace the URL below with another one.
+    # Alternative URL: "https://assets10.lottiefiles.com/packages/lf20_q4h09qcf.json"
     lottie_embed("https://lottie.host/ea0b15f3-7d47-4ac1-84ad-1f2a61d8b8e1/zXgPZbWqzM.json", height=280)
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+    # Power BI dashboard without the card container for a more fluid, non-fixed feel
     st.markdown("""
-        <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
+        <iframe title="Global Income Inequality Dashboard" width="100%" height="700"
         src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9"
-        frameborder="0" allowFullScreen="true"></iframe>
+        frameborder="0" allowFullScreen="true"
+        style="border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); margin-top: 24px; border: none;"></iframe>
     """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 elif page == "🔎 Insight":
     st.markdown("## 🔎 Insights")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
 
-    # Observations
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📌 Key Observations")
     st.write("""
@@ -141,7 +142,6 @@ elif page == "🔎 Insight":
     """)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Why it Matters
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("💡 Why It Matters")
     st.write("""
@@ -150,7 +150,6 @@ elif page == "🔎 Insight":
     """)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Dataset Insights
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📊 Dataset Insights")
 
