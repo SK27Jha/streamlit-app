@@ -94,9 +94,10 @@ elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    csv_path = r"C:\Users\ASUS\Downloads\global_income_inequality.csv"
+    # Use the uploaded CSV file
+    csv_path = "d488b9d8-6c7d-4438-acbd-2beee6a29d14.csv"   # uploaded file
 
-    if os.path.exists(csv_path):
+    try:
         df = pd.read_csv(csv_path)
 
         st.markdown("### 📊 Raw Data Preview")
@@ -118,8 +119,8 @@ elif page == "📈 Insights":
         st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
         st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
 
-    else:
-        st.error(f"⚠️ CSV file not found at `{csv_path}`")
+    except Exception as e:
+        st.error(f"⚠️ Error loading CSV: {e}")
 
 
 # -----------------------------
