@@ -100,65 +100,49 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-elif page == "🔎 Insight":
-    st.markdown("## 🔎 Insights")
-    lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
+# -----------------------------
+# Insights Page
+# -----------------------------
+elif page == "📈 Insights":
+    st.markdown("## 📈 Data Insights")
+    lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    # Key Observations
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📌 Key Observations")
-    st.write("""
-    - Countries with **higher Gini Index** show **greater inequality**.  
-    - Developed nations often have **lower inequality** but slower improvement.  
-    - Developing countries display **wider income gaps** due to uneven distribution.  
-    - Population growth in some regions correlates with **higher inequality trends**.  
-    - Wealth concentration is highest in the **top 10%**, especially in emerging markets.  
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # ✅ Default CSV path
+    csv_path = "global_inequality_data.csv"
+    uploaded_file = st.file_uploader("📂 Upload your CSV file", type=["csv"])
 
-    # Why it matters
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("💡 Why It Matters")
-    st.write("""
-    Understanding income inequality helps policymakers, researchers, and organizations  
-    design **targeted solutions** for inclusive growth and sustainable development.
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Dataset Insights
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📊 Dataset Insights")
-
-    csv_path = "a4763003-e63f-4c5f-a0ae-500467ce4b8c.csv"
-
-    # Upload option
-    uploaded_file = st.file_uploader("Upload CSV file (optional)", type=["csv"])
-    
-    if uploaded_file:
-        df_insight = pd.read_csv(uploaded_file)
-        st.session_state['df_insight'] = df_insight
-        st.success("✅ CSV uploaded successfully!")
-    elif 'df_insight' in st.session_state:
-        df_insight = st.session_state['df_insight']
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+        st.success("✅ Custom CSV uploaded successfully!")
     elif os.path.exists(csv_path):
-        df_insight = pd.read_csv(csv_path)
-        st.session_state['df_insight'] = df_insight
-        st.info(f"⚠️ Loaded local CSV: {csv_path}")
+        df = pd.read_csv(csv_path)
+        st.info(f"📂 Loaded default dataset: {csv_path}")
     else:
-        st.warning("⚠️ No CSV found. Please upload a CSV to view dataset insights.")
-        df_insight = None
+        st.error("⚠️ No dataset available. Please upload a CSV file.")
+        df = None
 
-    if df_insight is not None:
-        st.dataframe(df_insight, use_container_width=True)
-        st.markdown("---")
-        st.write("### 📈 Summary Metrics")
-        numeric_cols = df_insight.select_dtypes(include=['int64', 'float64']).columns
-        if len(numeric_cols) > 0:
-            for col in numeric_cols:
-                st.metric(f"{col} Average", f"{df_insight[col].mean():.2f}")
-        else:
-            st.info("No numeric columns to display metrics.")
-    st.markdown('</div>', unsafe_allow_html=True)
+    if df is not None:
+        # Raw Data Preview
+        st.markdown("### 📊 Raw Data Preview")
+        st.dataframe(df)
+
+        # Bar Chart
+        if "Country" in df.columns and "Gini Index" in df.columns:
+            st.markdown("### 📊 Country-wise Gini Index")
+            st.bar_chart(df.set_index("Country")["Gini Index"])
+
+        # Line Chart (if Year column exists)
+        if "Year" in df.columns:
+            st.markdown("### 📈 Gini Index Trend Over Years")
+            st.line_chart(df.groupby("Year")["Gini Index"].mean())
+
+        # Analysis
+        st.markdown("### 🔎 Quick Analysis")
+        if "Country" in df.columns and "Gini Index" in df.columns:
+            st.write(f"✅ Number of countries in dataset: **{df['Country'].nunique()}**")
+            st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
+            st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
+            st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
 
 # -----------------------------
 # About Page
