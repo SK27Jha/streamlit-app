@@ -14,8 +14,8 @@ st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide
 # -----------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
-if "active_page" not in st.session_state:
-    st.session_state.active_page = "🔑 Login"
+if "page" not in st.session_state:
+    st.session_state.page = "🔑 Login"
 
 # -----------------------------
 # Function for embedding Lottie animations
@@ -27,55 +27,74 @@ def lottie_embed(url, height=250):
     """, height=height+50)
 
 # -----------------------------
-# Sidebar Navigation with Equal Layout Buttons
+# Styling (White + Light Gray Theme)
 # -----------------------------
-st.sidebar.title("Welcome 👍")
-
-# Button styling
-st.sidebar.markdown("""
+st.markdown("""
 <style>
-    .sidebar-button > button {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 8px;
-        border-radius: 10px;
-        border: none;
+    .stApp {
+        background-color: #ffffff;  
+        color: #000000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .card {
         background-color: #f9f9f9;
-        box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
-        font-weight: bold;
-        font-size: 15px;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    /* Equal Sidebar Buttons */
+    .sidebar-btn-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .sidebar-btn-container button {
+        width: 100% !important;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 12px;
+        border-radius: 8px;
         text-align: center;
+        font-weight: 600;
+        color: #333;
         cursor: pointer;
     }
-    .sidebar-button > button:hover {
-        background-color: #eaeaea;
-    }
-    .sidebar-button.active > button {
-        background-color: #4CAF50 !important;
-        color: white !important;
+    .sidebar-btn-container button:hover {
+        background-color: #e6e6e6;
+        border-color: #bbb;
     }
 </style>
 """, unsafe_allow_html=True)
 
-pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
+# -----------------------------
+# Sidebar Navigation
+# -----------------------------
+st.sidebar.title("Welcome 👍")
 
-# Render all buttons under Welcome
-for page_name in pages:
-    css_class = "sidebar-button active" if st.session_state.active_page == page_name else "sidebar-button"
-    with st.sidebar.container():
-        st.markdown(f'<div class="{css_class}">', unsafe_allow_html=True)
-        if st.button(page_name, key=f"nav_{page_name}"):
-            st.session_state.active_page = page_name
-        st.markdown("</div>", unsafe_allow_html=True)
+st.sidebar.markdown('<div class="sidebar-btn-container">', unsafe_allow_html=True)
 
-page = st.session_state.active_page
+if st.sidebar.button("🔑 Login", use_container_width=True):
+    st.session_state.page = "🔑 Login"
+if st.sidebar.button("📊 Dashboard", use_container_width=True):
+    st.session_state.page = "📊 Dashboard"
+if st.sidebar.button("📈 Insights", use_container_width=True):
+    st.session_state.page = "📈 Insights"
+if st.sidebar.button("ℹ️ About", use_container_width=True):
+    st.session_state.page = "ℹ️ About"
+if st.sidebar.button("📝 Feedback", use_container_width=True):
+    st.session_state.page = "📝 Feedback"
+
+st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------
-# Login Page
+# Page Rendering
 # -----------------------------
+page = st.session_state.page
+
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)  # login animation
 
     if st.session_state.logged_in:
         if st.button("🚪 Logout", key="logout_btn"):
@@ -97,9 +116,6 @@ if page == "🔑 Login":
     else:
         st.success("✅ You are already logged in.")
 
-# -----------------------------
-# Dashboard Page
-# -----------------------------
 elif page == "📊 Dashboard":
     st.markdown("## 📊 Dashboard Overview")
 
@@ -121,9 +137,6 @@ elif page == "📊 Dashboard":
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# -----------------------------
-# Insights Page
-# -----------------------------
 elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
@@ -150,9 +163,6 @@ elif page == "📈 Insights":
     else:
         st.info("👆 Please upload a CSV file to see insights.")
 
-# -----------------------------
-# About Page
-# -----------------------------
 elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_kyu7xb1v.json", height=220)
@@ -177,9 +187,6 @@ elif page == "ℹ️ About":
     This dashboard aims to make inequality **easy to understand and act upon**.
     """)
 
-# -----------------------------
-# Feedback Page
-# -----------------------------
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=220)
