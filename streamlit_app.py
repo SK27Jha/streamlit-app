@@ -27,22 +27,61 @@ def lottie_embed(url, height=250):
 # -----------------------------
 # Styling (White + Light Gray Theme)
 # -----------------------------
+# -----------------------------
+# Centered Navigation Buttons
+# -----------------------------
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #ffffff;  
-        color: #000000;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .card {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
+.nav-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+div.stButton > button:first-child {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 12px;
+    height: 45px;
+    width: 160px;
+    font-size: 15px;
+    font-weight: bold;
+}
+div.stButton > button:hover {
+    background-color: #45a049;
+    color: #ffffff;
+}
 </style>
 """, unsafe_allow_html=True)
+
+# Create button row
+st.markdown('<div class="nav-container">', unsafe_allow_html=True)
+col1, col2, col3, col4, col5 = st.columns(5)
+
+with col1:
+    if st.button("🔑 Login"):
+        st.session_state.page = "login"
+with col2:
+    if st.button("📊 Dashboard"):
+        st.session_state.page = "dashboard"
+with col3:
+    if st.button("📈 Insights"):
+        st.session_state.page = "insights"
+with col4:
+    if st.button("ℹ️ About"):
+        st.session_state.page = "about"
+with col5:
+    if st.button("📝 Feedback"):
+        st.session_state.page = "feedback"
+st.markdown('</div>', unsafe_allow_html=True)
+
+# -----------------------------
+# Page Routing
+# -----------------------------
+if "page" not in st.session_state:
+    st.session_state.page = "login"
+
+page = st.session_state.page
 
 # -----------------------------
 # Sidebar Navigation
