@@ -86,9 +86,8 @@ page = st.session_state.page
 # -----------------------------
 # Sidebar Navigation
 # -----------------------------
-st.sidebar.title("📌 Navigation")
-pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
-page = st.sidebar.radio("Go to", pages)
+st.sidebar.title("Welcome👍")
+
 
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
