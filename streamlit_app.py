@@ -27,56 +27,48 @@ def lottie_embed(url, height=250):
     """, height=height+50)
 
 # -----------------------------
-# Styling
+# Sidebar Navigation with Equal Layout Buttons
 # -----------------------------
-st.markdown("""
+st.sidebar.title("Welcome 👍")
+
+# Button styling
+st.sidebar.markdown("""
 <style>
-    .nav-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-        gap: 20px;
-    }
-    .nav-button {
-        flex: 1;
-        text-align: center;
-    }
-    .stButton>button {
+    .sidebar-button > button {
         width: 100%;
-        padding: 15px 0;
-        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 10px;
         border: none;
         background-color: #f9f9f9;
-        box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
         font-weight: bold;
-        font-size: 16px;
+        font-size: 15px;
+        text-align: center;
         cursor: pointer;
     }
-    .stButton>button:hover {
+    .sidebar-button > button:hover {
         background-color: #eaeaea;
+    }
+    .sidebar-button.active > button {
+        background-color: #4CAF50 !important;
+        color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# Navigation (Equal Box Layout)
-# -----------------------------
 pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
 
-st.markdown('<div class="nav-container">', unsafe_allow_html=True)
-cols = st.columns(len(pages))
-for i, page_name in enumerate(pages):
-    with cols[i]:
+# Render all buttons under Welcome
+for page_name in pages:
+    css_class = "sidebar-button active" if st.session_state.active_page == page_name else "sidebar-button"
+    with st.sidebar.container():
+        st.markdown(f'<div class="{css_class}">', unsafe_allow_html=True)
         if st.button(page_name, key=f"nav_{page_name}"):
             st.session_state.active_page = page_name
-st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 page = st.session_state.active_page
-
-# -----------------------------
-# Sidebar
-# -----------------------------
-st.sidebar.title("Welcome 👍")
 
 # -----------------------------
 # Login Page
