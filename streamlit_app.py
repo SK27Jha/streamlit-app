@@ -14,6 +14,8 @@ st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide
 # -----------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+if "active_page" not in st.session_state:
+    st.session_state.active_page = "🔑 Login"
 
 # -----------------------------
 # Function for embedding Lottie animations
@@ -25,37 +27,63 @@ def lottie_embed(url, height=250):
     """, height=height+50)
 
 # -----------------------------
-# Styling (White + Light Gray Theme)
-# -----------------------------
-# -----------------------------
-# Centered Navigation Buttons
+# Styling
 # -----------------------------
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #ffffff;  
-        color: #000000;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .card {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    .nav-container {
+        display: flex;
+        justify-content: center;
         margin-bottom: 20px;
+        gap: 20px;
+    }
+    .nav-button {
+        flex: 1;
+        text-align: center;
+    }
+    .stButton>button {
+        width: 100%;
+        padding: 15px 0;
+        border-radius: 12px;
+        border: none;
+        background-color: #f9f9f9;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .stButton>button:hover {
+        background-color: #eaeaea;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # -----------------------------
-# Sidebar Navigation
+# Navigation (Equal Box Layout)
 # -----------------------------
-st.sidebar.title("Welcome👍")
+pages = ["🔑 Login", "📊 Dashboard", "📈 Insights", "ℹ️ About", "📝 Feedback"]
 
+st.markdown('<div class="nav-container">', unsafe_allow_html=True)
+cols = st.columns(len(pages))
+for i, page_name in enumerate(pages):
+    with cols[i]:
+        if st.button(page_name, key=f"nav_{page_name}"):
+            st.session_state.active_page = page_name
+st.markdown('</div>', unsafe_allow_html=True)
 
+page = st.session_state.active_page
+
+# -----------------------------
+# Sidebar
+# -----------------------------
+st.sidebar.title("Welcome 👍")
+
+# -----------------------------
+# Login Page
+# -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)  # login animation
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)
 
     if st.session_state.logged_in:
         if st.button("🚪 Logout", key="logout_btn"):
@@ -70,12 +98,13 @@ if page == "🔑 Login":
             if username == "admin" and password == "1234":
                 st.session_state.logged_in = True
                 st.success("✅ Login Successful!")
-                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)  # success animation
+                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)
                 st.rerun()
             else:
                 st.error("❌ Invalid Username or Password")
     else:
         st.success("✅ You are already logged in.")
+
 # -----------------------------
 # Dashboard Page
 # -----------------------------
@@ -186,6 +215,5 @@ elif page == "📝 Feedback":
                 df_combined.to_csv("feedback.csv", index=False)
                 
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
-                
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
