@@ -33,16 +33,30 @@ def lottie_embed(url, height=250):
 # -----------------------------
 st.markdown("""
 <style>
-/* Office / Teams working on computers background */
 [data-testid="stAppViewContainer"] {
-    background-image: url('https://images.unsplash.com/photo-1581090700227-93f98a2b6b03?auto=format&fit=crop&w=1470&q=80');
-    background-size: cover;
-    background-position: center;
+    /* Main office image with people working */
+    background-image: 
+        url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1470&q=80'),
+        url('https://images.unsplash.com/photo-1581091870626-87e7488dc9d8?auto=format&fit=crop&w=1470&q=80');
+    background-size: cover, cover;
+    background-position: center, center;
     background-attachment: fixed;
     color: white;
+    position: relative;
 }
 
-/* Glassmorphism Cards */
+/* Optional overlay for global finance graphs */
+[data-testid="stAppViewContainer"]::before {
+    content: "";
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background-image: url('https://images.unsplash.com/photo-1581091870626-87e7488dc9d8?auto=format&fit=crop&w=1470&q=80');
+    background-size: cover;
+    opacity: 0.25;  /* transparency for overlay */
+    pointer-events: none;
+}
+
+/* Glassmorphism cards */
 .card {
     background-color: rgba(0,0,0,0.55);
     padding: 20px;
@@ -62,6 +76,7 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
