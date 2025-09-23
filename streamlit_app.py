@@ -31,40 +31,27 @@ def lottie_embed(url, height=250):
 # -----------------------------
 # Styling
 # -----------------------------
-import base64
-
-# Encode the image file to base64
-with open("image.jpg", "rb") as image_file:
-    image_bytes = image_file.read()
-    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
-
-# Then use image_base64 in your CSS string for the background image
-st.markdown(f"""
+st.markdown("""
 <style>
-    .stApp {{
-        background-image: url("data:image/jpg;base64,{image_base64}");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
+    .stApp {
+        background-color: #ffffff;  
         color: #000000;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }}
-    .card {{
-        background-color: #f9f9f9cc;  /* slight transparency */
+    }
+    .card {
+        background-color: #f9f9f9;
         padding: 20px;
         border-radius: 12px;
         box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
         margin-bottom: 20px;
-    }}
-    .sidebar-btn-container {{
+    }
+    .sidebar-btn-container {
         display: flex;
         flex-direction: column;
         gap: 10px;
-    }}
+    }
 </style>
 """, unsafe_allow_html=True)
-
-
 
 # -----------------------------
 # Sidebar Navigation
@@ -214,13 +201,20 @@ elif page == "📝 Feedback":
                 }
                 df_new = pd.DataFrame(feedback_data)
 
-                if os.path.exists("feedback.csv"):
-                    df_existing = pd.read_csv("feedback.csv")
+                # Save feedback in Excel instead of CSV
+                excel_file = "feedback.xlsx"
+
+                if os.path.exists(excel_file):
+                    # Load existing Excel
+                    df_existing = pd.read_excel(excel_file)
                     df_combined = pd.concat([df_existing, df_new], ignore_index=True)
                 else:
                     df_combined = df_new
 
-                df_combined.to_csv("feedback.csv", index=False)
-                st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
+                # Write back to Excel
+                with pd.ExcelWriter(excel_file, engine="openpyxl", mode="w") as writer:
+                    df_combined.to_excel(writer, index=False, sheet_name="Feedback")
+
+                st.success(f"✅ Thank you! Feedback saved to Excel with rating {rating}/5")
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
