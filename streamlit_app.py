@@ -191,6 +191,10 @@ elif page == "ℹ️ About":
     """)
 
  
+import openai
+
+# Initialize API key
+openai.api_key = "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"
 
 elif page == "🤖 AI Assistance":
     st.markdown("## 🤖 AI Assistance")
