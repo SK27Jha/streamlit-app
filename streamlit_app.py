@@ -33,23 +33,39 @@ def lottie_embed(url, height=250):
 # -----------------------------
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #ffffff;  
-        color: #000000;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .card {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-    .sidebar-btn-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+/* Animated 3D Gradient Background */
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(-45deg, #3a1c71, #d76d77, #ffaf7b, #43cea2, #185a9d);
+    background-size: 500% 500%;
+    animation: gradientMove 20s ease infinite;
+    color: white;
+}
+
+/* Smooth gradient animation */
+@keyframes gradientMove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* Card styling */
+.card {
+    background-color: rgba(255,255,255,0.15);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    color: white;
+}
+
+/* Sidebar buttons */
+.sidebar-btn-container button {
+    background-color: rgba(255,255,255,0.2) !important;
+    color: white !important;
+    border-radius: 10px;
+    border: none;
+}
 </style>
 """, unsafe_allow_html=True)
 
