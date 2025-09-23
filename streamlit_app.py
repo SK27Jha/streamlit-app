@@ -190,21 +190,52 @@ elif page == "ℹ️ About":
     This dashboard aims to make inequality **easy to understand and act upon**.
     """)
 
-    elif page == "🤖 AI Assistance":
+  import io
+
+elif page == "🤖 AI Assistance":
     st.markdown("## 🤖 AI Assistance")
     lottie_embed("https://assets10.lottiefiles.com/packages/lf20_qp1q7mct.json", height=220)
 
-    st.info("💡 Ask me anything about this dashboard, income inequality data, or usage.")
+    st.info("💡 Ask me anything about this dashboard, uploaded CSV data, or inequality insights.")
+
+    uploaded_csv = st.file_uploader("📂 (Optional) Upload CSV for AI to analyze", type=["csv"])
+
+    df = None
+    if uploaded_csv is not None:
+        df = pd.read_csv(uploaded_csv)
+        st.success(f"✅ CSV loaded with {df.shape[0]} rows and {df.shape[1]} columns")
+        st.dataframe(df.head())
 
     user_query = st.text_area("💬 Enter your question here:")
 
     if st.button("Get Answer"):
         if user_query.strip():
-            # Placeholder response (replace with API later)
-            st.success(f"✅ You asked: **{user_query}**")
-            st.write("🤖 *AI Response Placeholder*: This is where the answer from the AI model will appear.")
+            with st.spinner("🤖 Thinking..."):
+                try:
+                    context = ""
+                    if df is not None:
+                        # Give AI context about the dataset
+                        context = f"Dataset columns: {list(df.columns)}. Example rows: {df.head(5).to_dict()}"
+
+                    response = openai.ChatCompletion.create(
+                        model="gpt-4o-mini",
+                        messages=[
+                            {"role": "system", "content": "You are an AI assistant that analyzes a Global Income Inequality Dashboard. If a CSV dataset is provided, use it to answer questions based on the data."},
+                            {"role": "user", "content": f"Question: {user_query}\n\nContext:\n{context}"}
+                        ],
+                        temperature=0.7,
+                        max_tokens=500
+                    )
+
+                    answer = response["choices"][0]["message"]["content"]
+                    st.success("✅ Answer:")
+                    st.write(answer)
+
+                except Exception as e:
+                    st.error(f"⚠️ Error: {e}")
         else:
             st.warning("⚠️ Please enter a question before submitting.")
+
 
 
 elif page == "📝 Feedback":
