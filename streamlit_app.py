@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from datetime import datetime
 import streamlit.components.v1 as components
+import openai
 
 # -----------------------------
 # Page Config
@@ -27,7 +28,7 @@ def lottie_embed(url, height=250):
     """, height=height+50)
 
 # -----------------------------
-# Styling (White + Light Gray Theme)
+# Styling
 # -----------------------------
 st.markdown("""
 <style>
@@ -89,15 +90,30 @@ if st.sidebar.button("📝 Feedback", use_container_width=True):
 
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
+# -----------------------------
+# OpenAI Setup
+# -----------------------------
+openai.api_key = "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"
+
+# -----------------------------
+# Load Fixed CSV (for AI Assistance)
+# -----------------------------
+csv_file = "d488b9d8-6c7d-4438-acbd-2beee6a29d14.csv"
+df_ai = None
+if os.path.exists(csv_file):
+    df_ai = pd.read_csv(csv_file)
 
 # -----------------------------
 # Page Rendering
 # -----------------------------
 page = st.session_state.page
 
+# -----------------------------
+# Login Page
+# -----------------------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)  # login animation
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)
 
     if st.session_state.logged_in:
         if st.button("🚪 Logout", key="logout_btn"):
@@ -119,6 +135,9 @@ if page == "🔑 Login":
     else:
         st.success("✅ You are already logged in.")
 
+# -----------------------------
+# Dashboard
+# -----------------------------
 elif page == "📊 Dashboard":
     st.markdown("## 📊 Dashboard Overview")
 
@@ -140,6 +159,9 @@ elif page == "📊 Dashboard":
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+# -----------------------------
+# Insights Page
+# -----------------------------
 elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
@@ -166,6 +188,9 @@ elif page == "📈 Insights":
     else:
         st.info("👆 Please upload a CSV file to see insights.")
 
+# -----------------------------
+# About Page
+# -----------------------------
 elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_kyu7xb1v.json", height=220)
@@ -190,8 +215,54 @@ elif page == "ℹ️ About":
     This dashboard aims to make inequality **easy to understand and act upon**.
     """)
 
- 
+# -----------------------------
+# AI Assistance Page
+# -----------------------------
+elif page == "🤖 AI Assistance":
+    st.markdown("## 🤖 AI Assistance")
+    lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
 
+    if df_ai is not None:
+        st.success(f"✅ Dataset loaded with {df_ai.shape[0]} rows and {df_ai.shape[1]} columns")
+        st.dataframe(df_ai.head())
+
+        user_query = st.text_area("💬 Ask a question about the dataset or dashboard:")
+
+        if st.button("Get Answer"):
+            if user_query.strip():
+                with st.spinner("🤖 Thinking..."):
+                    try:
+                        context = f"Dataset columns: {list(df_ai.columns)}. Example rows: {df_ai.head(5).to_dict()}"
+
+                        response = openai.ChatCompletion.create(
+                            model="gpt-4o-mini",
+                            messages=[
+                                {
+                                    "role": "system",
+                                    "content": (
+                                        "You are an AI assistant that analyzes a Global Income Inequality Dashboard. "
+                                        "Use the provided dataset to answer questions."
+                                    )
+                                },
+                                {"role": "user", "content": f"Question: {user_query}\n\nContext:\n{context}"}
+                            ],
+                            temperature=0.7,
+                            max_tokens=500
+                        )
+                        answer = response["choices"][0]["message"]["content"]
+                        st.success("✅ Answer:")
+                        st.write(answer)
+
+                    except Exception as e:
+                        st.error(f"⚠️ Error: {e}")
+            else:
+                st.warning("⚠️ Please enter a question before submitting.")
+    else:
+        st.error("⚠️ CSV file not found. Please make sure it exists.")
+
+# -----------------------------
+# Feedback Page
+# -----------------------------
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=220)
