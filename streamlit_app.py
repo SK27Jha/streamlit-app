@@ -201,20 +201,25 @@ elif page == "📝 Feedback":
                 }
                 df_new = pd.DataFrame(feedback_data)
 
-                # Save feedback in Excel instead of CSV
-                excel_file = "feedback.xlsx"
+                csv_file = "feedback.csv"
 
-                if os.path.exists(excel_file):
-                    # Load existing Excel
-                    df_existing = pd.read_excel(excel_file)
+                if os.path.exists(csv_file):
+                    df_existing = pd.read_csv(csv_file)
                     df_combined = pd.concat([df_existing, df_new], ignore_index=True)
                 else:
                     df_combined = df_new
 
-                # Write back to Excel
-                with pd.ExcelWriter(excel_file, engine="openpyxl", mode="w") as writer:
-                    df_combined.to_excel(writer, index=False, sheet_name="Feedback")
-
-                st.success(f"✅ Thank you! Feedback saved to Excel with rating {rating}/5")
+                df_combined.to_csv(csv_file, index=False)
+                st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
+
+    # Show Download button if feedback.csv exists
+    if os.path.exists("feedback.csv"):
+        with open("feedback.csv", "rb") as f:
+            st.download_button(
+                label="⬇️ Download All Feedback (CSV)",
+                data=f,
+                file_name="feedback.csv",
+                mime="text/csv"
+            )
