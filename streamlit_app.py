@@ -33,16 +33,15 @@ def lottie_embed(url, height=250):
 # -----------------------------
 st.markdown("""
 <style>
-/* 3D Laptop Background */
 [data-testid="stAppViewContainer"] {
-    background-image: url('https://images.unsplash.com/photo-1612831664653-3f1b1b8b9a77?auto=format&fit=crop&w=1470&q=80');
+    background-image: url('https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1470&q=80');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     color: white;
 }
 
-/* Card styling with semi-transparent glass effect */
+/* Card styling */
 .card {
     background-color: rgba(0,0,0,0.5);
     padding: 20px;
