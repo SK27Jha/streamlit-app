@@ -191,66 +191,6 @@ elif page == "ℹ️ About":
     """)
 
  
-import openai
-
-# Initialize API key
-openai.api_key = "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"
-
-elif page == "🤖 AI Assistance":
-    st.markdown("## 🤖 AI Assistance")
-    lottie_embed("https://assets10.lottiefiles.com/packages/lf20_qp1q7mct.json", height=220)
-
-    st.info("💡 Ask me anything about this dashboard, uploaded CSV data, or inequality insights.")
-
-    # File uploader for CSV
-    uploaded_csv = st.file_uploader("📂 (Optional) Upload CSV for AI to analyze", type=["csv"])
-
-    df = None
-    if uploaded_csv is not None:
-        df = pd.read_csv(uploaded_csv)
-        st.success(f"✅ CSV loaded with {df.shape[0]} rows and {df.shape[1]} columns")
-        st.dataframe(df.head())
-
-    # User query box
-    user_query = st.text_area("💬 Enter your question here:")
-
-    if st.button("Get Answer"):
-        if user_query.strip():
-            with st.spinner("🤖 Thinking..."):
-                try:
-                    context = ""
-                    if df is not None:
-                        # Give AI context about dataset
-                        context = f"Dataset columns: {list(df.columns)}. Example rows: {df.head(5).to_dict()}"
-
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=[
-                            {
-                                "role": "system",
-                                "content": "You are an AI assistant that analyzes a Global Income Inequality Dashboard. "
-                                           "If a CSV dataset is provided, use it to answer questions based on the data."
-                            },
-                            {
-                                "role": "user",
-                                "content": f"Question: {user_query}\n\nContext:\n{context}"
-                            }
-                        ],
-                        temperature=0.7,
-                        max_tokens=500
-                    )
-
-                    answer = response["choices"][0]["message"]["content"]
-                    st.success("✅ Answer:")
-                    st.write(answer)
-
-                except Exception as e:
-                    st.error(f"⚠️ Error: {e}")
-        else:
-            st.warning("⚠️ Please enter a question before submitting.")
-
-
-
 
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
