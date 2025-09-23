@@ -173,26 +173,67 @@ elif page == "ℹ️ About":
     """)
 
 # ---------------- AI Assistance ----------------
+# ---------------- AI Assistance ----------------
 elif page == "🤖 AI Assistance":
     st.markdown("## 🤖 AI Assistance")
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=180)
 
-    user_query = st.text_area("💬 Ask me anything about this dashboard/data:")
-    if st.button("Get Answer"):
-        if user_query.strip():
+    # Initialize chat history
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    # User input
+    user_input = st.text_area("💬 Ask me anything about this dashboard/data:")
+
+    if st.button("Send"):
+        if user_input.strip():
+            # Add user message
+            st.session_state.chat_history.append({"role": "user", "content": user_input})
             try:
+                # Call OpenAI API
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
-                        {"role": "system", "content": "You are an AI assistant helping with dashboard insights."},
-                        {"role": "user", "content": user_query},
-                    ]
+                        {"role": "system", "content": "You are an AI assistant helping with dashboard insights."}
+                    ] + st.session_state.chat_history
                 )
-                st.success(response.choices[0].message.content)
+                ai_answer = response.choices[0].message.content
+                # Add AI response
+                st.session_state.chat_history.append({"role": "assistant", "content": ai_answer})
             except Exception as e:
                 st.error(f"⚠️ API Error: {str(e)}")
         else:
             st.error("⚠️ Please enter a question.")
+
+    # Display chat with chat-bubble style
+    for chat in st.session_state.chat_history:
+        if chat["role"] == "user":
+            st.markdown(f"""
+            <div style='
+                background-color: #DCF8C6;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 5px 0;
+                text-align: right;
+                max-width: 80%;
+                float: right;
+                clear: both;
+            '>{chat['content']}</div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div style='
+                background-color: #F1F0F0;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 5px 0;
+                text-align: left;
+                max-width: 80%;
+                float: left;
+                clear: both;
+            '>{chat['content']}</div>
+            """, unsafe_allow_html=True)
+
 
 # ---------------- Feedback ----------------
 elif page == "📝 Feedback":
