@@ -8,7 +8,7 @@ import openai
 # -----------------------------
 # Set OpenAI API key
 # -----------------------------
-openai.api_key = "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"
+openai.api_key = "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"
 
 # -----------------------------
 # Page Config
