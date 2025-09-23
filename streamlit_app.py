@@ -192,13 +192,21 @@ elif page == "🤖 AI Assistance":
                 # Prepare system messages
                 system_messages = [{"role": "system", "content": "You are an AI assistant helping with dashboard insights."}]
                 
-                # Include full CSV data if uploaded
+                # Include CSV summary if uploaded
                 if st.session_state.csv_data is not None:
                     df = st.session_state.csv_data
-                    data_summary = df.to_string(index=False)
+
+                    # Select key columns to avoid huge input
+                    key_cols = df.columns.tolist()
+                    df_subset = df[key_cols]
+
+                    # Summary stats + top 10 rows
+                    summary_stats = df_subset.describe(include='all').to_string()
+                    top_rows = df_subset.head(10).to_string(index=False)
+
                     system_messages.append({
                         "role": "system",
-                        "content": f"Use this dataset to answer any question:\n{data_summary}"
+                        "content": f"Use this dataset summary and top rows to answer questions:\nSummary stats:\n{summary_stats}\n\nTop rows:\n{top_rows}"
                     })
 
                 # Call OpenAI API
