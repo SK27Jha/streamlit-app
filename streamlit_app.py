@@ -82,10 +82,13 @@ if st.sidebar.button("📈 Insights", use_container_width=True):
     st.session_state.page = "📈 Insights"
 if st.sidebar.button("ℹ️ About", use_container_width=True):
     st.session_state.page = "ℹ️ About"
+if st.sidebar.button("🤖 AI Assistance", use_container_width=True):
+    st.session_state.page = "🤖 AI Assistance"
 if st.sidebar.button("📝 Feedback", use_container_width=True):
     st.session_state.page = "📝 Feedback"
 
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
+
 
 # -----------------------------
 # Page Rendering
@@ -186,6 +189,23 @@ elif page == "ℹ️ About":
     Income inequality affects **social stability, economic growth, and global development**.  
     This dashboard aims to make inequality **easy to understand and act upon**.
     """)
+
+    elif page == "🤖 AI Assistance":
+    st.markdown("## 🤖 AI Assistance")
+    lottie_embed("https://assets10.lottiefiles.com/packages/lf20_qp1q7mct.json", height=220)
+
+    st.info("💡 Ask me anything about this dashboard, income inequality data, or usage.")
+
+    user_query = st.text_area("💬 Enter your question here:")
+
+    if st.button("Get Answer"):
+        if user_query.strip():
+            # Placeholder response (replace with API later)
+            st.success(f"✅ You asked: **{user_query}**")
+            st.write("🤖 *AI Response Placeholder*: This is where the answer from the AI model will appear.")
+        else:
+            st.warning("⚠️ Please enter a question before submitting.")
+
 
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
