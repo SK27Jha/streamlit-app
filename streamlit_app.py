@@ -33,17 +33,18 @@ def lottie_embed(url, height=250):
 # -----------------------------
 st.markdown("""
 <style>
+/* Office / Teams working on computers background */
 [data-testid="stAppViewContainer"] {
-    background-image: url('https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1470&q=80');
+    background-image: url('https://images.unsplash.com/photo-1581090700227-93f98a2b6b03?auto=format&fit=crop&w=1470&q=80');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     color: white;
 }
 
-/* Card styling */
+/* Glassmorphism Cards */
 .card {
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.55);
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0px 4px 20px rgba(0,0,0,0.5);
@@ -61,6 +62,7 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # -----------------------------
