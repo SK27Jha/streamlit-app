@@ -33,29 +33,23 @@ def lottie_embed(url, height=250):
 # -----------------------------
 st.markdown("""
 <style>
-/* Animated 3D Gradient Background */
+/* 3D Laptop Background */
 [data-testid="stAppViewContainer"] {
-    background: linear-gradient(-45deg, #3a1c71, #d76d77, #ffaf7b, #43cea2, #185a9d);
-    background-size: 500% 500%;
-    animation: gradientMove 20s ease infinite;
+    background-image: url('https://images.unsplash.com/photo-1612831664653-3f1b1b8b9a77?auto=format&fit=crop&w=1470&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: white;
 }
 
-/* Smooth gradient animation */
-@keyframes gradientMove {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-}
-
-/* Card styling */
+/* Card styling with semi-transparent glass effect */
 .card {
-    background-color: rgba(255,255,255,0.15);
+    background-color: rgba(0,0,0,0.5);
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0px 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.5);
     margin-bottom: 20px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(8px);
     color: white;
 }
 
@@ -68,6 +62,7 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # -----------------------------
 # Sidebar Navigation
