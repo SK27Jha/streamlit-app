@@ -31,27 +31,31 @@ def lottie_embed(url, height=250):
 # -----------------------------
 # Styling
 # -----------------------------
-st.markdown("""
+st.markdown(f"""
 <style>
-    .stApp {
-        background-color: #ffffff;  
+    .stApp {{
+        background-image: url("data:image/jpg;base64,{image_base64}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
         color: #000000;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .card {
-        background-color: #f9f9f9;
+    }}
+    .card {{
+        background-color: #f9f9f9cc;  /* slight transparency */
         padding: 20px;
         border-radius: 12px;
         box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
         margin-bottom: 20px;
-    }
-    .sidebar-btn-container {
+    }}
+    .sidebar-btn-container {{
         display: flex;
         flex-direction: column;
         gap: 10px;
-    }
+    }}
 </style>
 """, unsafe_allow_html=True)
+
 
 # -----------------------------
 # Sidebar Navigation
