@@ -3,7 +3,12 @@ import pandas as pd
 import os
 from datetime import datetime
 import streamlit.components.v1 as components
-import openai
+from openai import OpenAI
+
+# -----------------------------
+# API Client Setup
+# -----------------------------
+client = OpenAI(api_key="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")  # 👈 यहां अपनी API Key डाल
 
 # -----------------------------
 # Page Config
@@ -44,26 +49,10 @@ st.markdown("""
         box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
         margin-bottom: 20px;
     }
-    /* Equal Sidebar Buttons */
     .sidebar-btn-container {
         display: flex;
         flex-direction: column;
         gap: 10px;
-    }
-    .sidebar-btn-container button {
-        width: 100% !important;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        padding: 12px;
-        border-radius: 8px;
-        text-align: center;
-        font-weight: 600;
-        color: #333;
-        cursor: pointer;
-    }
-    .sidebar-btn-container button:hover {
-        background-color: #e6e6e6;
-        border-color: #bbb;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -91,26 +80,11 @@ if st.sidebar.button("📝 Feedback", use_container_width=True):
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------
-# OpenAI Setup
-# -----------------------------
-openai.api_key = "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"
-
-# -----------------------------
-# Load Fixed CSV (for AI Assistance)
-# -----------------------------
-csv_file = "d488b9d8-6c7d-4438-acbd-2beee6a29d14.csv"
-df_ai = None
-if os.path.exists(csv_file):
-    df_ai = pd.read_csv(csv_file)
-
-# -----------------------------
 # Page Rendering
 # -----------------------------
 page = st.session_state.page
 
-# -----------------------------
-# Login Page
-# -----------------------------
+# ---------------- Login Page ----------------
 if page == "🔑 Login":
     st.markdown("## 🔑 Login Page")
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)
@@ -128,16 +102,13 @@ if page == "🔑 Login":
             if username == "admin" and password == "1234":
                 st.session_state.logged_in = True
                 st.success("✅ Login Successful!")
-                lottie_embed("https://assets2.lottiefiles.com/private_files/lf30_jsgzryzx.json", height=200)
                 st.rerun()
             else:
                 st.error("❌ Invalid Username or Password")
     else:
         st.success("✅ You are already logged in.")
 
-# -----------------------------
-# Dashboard
-# -----------------------------
+# ---------------- Dashboard ----------------
 elif page == "📊 Dashboard":
     st.markdown("## 📊 Dashboard Overview")
 
@@ -159,9 +130,7 @@ elif page == "📊 Dashboard":
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# -----------------------------
-# Insights Page
-# -----------------------------
+# ---------------- Insights ----------------
 elif page == "📈 Insights":
     st.markdown("## 📈 Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
@@ -188,9 +157,7 @@ elif page == "📈 Insights":
     else:
         st.info("👆 Please upload a CSV file to see insights.")
 
-# -----------------------------
-# About Page
-# -----------------------------
+# ---------------- About ----------------
 elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_kyu7xb1v.json", height=220)
@@ -203,66 +170,31 @@ elif page == "ℹ️ About":
     - Provide **interactive dashboards** using Power BI
     - Highlight regions with **extreme inequality**
     - Gather **feedback for continuous improvement**
-
-    ### 🛠 Methodology:
-    - Data Cleaning & Preprocessing (CSV datasets)
-    - Exploratory Data Analysis (EDA) using Python
-    - Dashboard integration with **Power BI**
-    - User feedback integration for better insights
-
-    ### 🌍 Why It Matters?
-    Income inequality affects **social stability, economic growth, and global development**.  
-    This dashboard aims to make inequality **easy to understand and act upon**.
     """)
 
-# -----------------------------
-# AI Assistance Page
-# -----------------------------
+# ---------------- AI Assistance ----------------
 elif page == "🤖 AI Assistance":
     st.markdown("## 🤖 AI Assistance")
-    lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=200)
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=180)
 
-    if df_ai is not None:
-        st.success(f"✅ Dataset loaded with {df_ai.shape[0]} rows and {df_ai.shape[1]} columns")
-        st.dataframe(df_ai.head())
+    user_query = st.text_area("💬 Ask me anything about this dashboard/data:")
+    if st.button("Get Answer"):
+        if user_query.strip():
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": "You are an AI assistant helping with dashboard insights."},
+                        {"role": "user", "content": user_query},
+                    ]
+                )
+                st.success(response.choices[0].message.content)
+            except Exception as e:
+                st.error(f"⚠️ API Error: {str(e)}")
+        else:
+            st.error("⚠️ Please enter a question.")
 
-        user_query = st.text_area("💬 Ask a question about the dataset or dashboard:")
-
-        if st.button("Get Answer"):
-            if user_query.strip():
-                with st.spinner("🤖 Thinking..."):
-                    try:
-                        context = f"Dataset columns: {list(df_ai.columns)}. Example rows: {df_ai.head(5).to_dict()}"
-
-                        response = openai.ChatCompletion.create(
-                            model="gpt-4o-mini",
-                            messages=[
-                                {
-                                    "role": "system",
-                                    "content": (
-                                        "You are an AI assistant that analyzes a Global Income Inequality Dashboard. "
-                                        "Use the provided dataset to answer questions."
-                                    )
-                                },
-                                {"role": "user", "content": f"Question: {user_query}\n\nContext:\n{context}"}
-                            ],
-                            temperature=0.7,
-                            max_tokens=500
-                        )
-                        answer = response["choices"][0]["message"]["content"]
-                        st.success("✅ Answer:")
-                        st.write(answer)
-
-                    except Exception as e:
-                        st.error(f"⚠️ Error: {e}")
-            else:
-                st.warning("⚠️ Please enter a question before submitting.")
-    else:
-        st.error("⚠️ CSV file not found. Please make sure it exists.")
-
-# -----------------------------
-# Feedback Page
-# -----------------------------
+# ---------------- Feedback ----------------
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=220)
@@ -288,7 +220,6 @@ elif page == "📝 Feedback":
                     df_combined = df_new
 
                 df_combined.to_csv("feedback.csv", index=False)
-                
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
