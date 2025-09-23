@@ -4,6 +4,10 @@ import os
 from datetime import datetime
 import streamlit.components.v1 as components
 from openai import OpenAI
+import os
+
+if not os.environ.get("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"):
+    st.error("⚠️ OpenAI API key not found! Please set your OPENAI_API_KEY environment variable.")
 
 # -----------------------------
 # API Client Setup
