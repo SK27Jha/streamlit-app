@@ -31,6 +31,14 @@ def lottie_embed(url, height=250):
 # -----------------------------
 # Styling
 # -----------------------------
+import base64
+
+# Encode the image file to base64
+with open("image.jpg", "rb") as image_file:
+    image_bytes = image_file.read()
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+
+# Then use image_base64 in your CSS string for the background image
 st.markdown(f"""
 <style>
     .stApp {{
@@ -55,6 +63,7 @@ st.markdown(f"""
     }}
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # -----------------------------
