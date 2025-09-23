@@ -33,38 +33,50 @@ def lottie_embed(url, height=250):
 # -----------------------------
 st.markdown("""
 <style>
+/* Full-screen office + global finance background */
 [data-testid="stAppViewContainer"] {
-    /* Main office image with people working */
-    background-image: 
-        url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1470&q=80'),
-        url('https://images.unsplash.com/photo-1581091870626-87e7488dc9d8?auto=format&fit=crop&w=1470&q=80');
-    background-size: cover, cover;
-    background-position: center, center;
+    background-image: url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1470&q=80');
+    background-size: cover;
+    background-position: center;
     background-attachment: fixed;
     color: white;
     position: relative;
 }
 
-/* Optional overlay for global finance graphs */
+/* Overlay to enhance readability */
 [data-testid="stAppViewContainer"]::before {
     content: "";
     position: absolute;
     top:0; left:0; width:100%; height:100%;
-    background-image: url('https://images.unsplash.com/photo-1581091870626-87e7488dc9d8?auto=format&fit=crop&w=1470&q=80');
-    background-size: cover;
-    opacity: 0.25;  /* transparency for overlay */
+    background-color: rgba(0,0,0,0.45);  /* dark overlay for clarity */
     pointer-events: none;
 }
 
-/* Glassmorphism cards */
-.card {
-    background-color: rgba(0,0,0,0.55);
-    padding: 20px;
+/* Glassmorphism cards for all sections */
+.card, .stButton, .stTextInput, .stTextArea {
+    background-color: rgba(255,255,255,0.85);
+    color: black;
     border-radius: 15px;
-    box-shadow: 0px 4px 20px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     backdrop-filter: blur(8px);
+}
+
+/* Metrics boxes styling */
+.stMetric {
+    background-color: rgba(255,255,255,0.85) !important;
+    color: black !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background-color: rgba(0,0,0,0.7);
     color: white;
+    backdrop-filter: blur(10px);
 }
 
 /* Sidebar buttons */
@@ -73,6 +85,9 @@ st.markdown("""
     color: white !important;
     border-radius: 10px;
     border: none;
+    padding: 8px 0;
+    font-size: 16px;
+    margin-bottom: 5px;
 }
 </style>
 """, unsafe_allow_html=True)
