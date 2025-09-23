@@ -3,16 +3,12 @@ import pandas as pd
 import os
 from datetime import datetime
 import streamlit.components.v1 as components
-from openai import OpenAI
-import os
-
-if not os.environ.get("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"):
-    st.error("⚠️ OpenAI API key not found! Please set your OPENAI_API_KEY environment variable.")
+import openai
 
 # -----------------------------
-# API Client Setup
+# Set OpenAI API key
 # -----------------------------
-client = OpenAI(api_key="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")  # 👈 यहां अपनी API Key डाल
+openai.api_key = "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"
 
 # -----------------------------
 # Page Config
@@ -26,6 +22,10 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "page" not in st.session_state:
     st.session_state.page = "🔑 Login"
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+if "csv_data" not in st.session_state:
+    st.session_state.csv_data = None
 
 # -----------------------------
 # Function for embedding Lottie animations
@@ -65,7 +65,6 @@ st.markdown("""
 # Sidebar Navigation
 # -----------------------------
 st.sidebar.title("Welcome 👍")
-
 st.sidebar.markdown('<div class="sidebar-btn-container">', unsafe_allow_html=True)
 
 if st.sidebar.button("🔑 Login", use_container_width=True):
@@ -142,6 +141,7 @@ elif page == "📈 Insights":
     uploaded_file = st.file_uploader("📂 Upload CSV file", type=["csv"])
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
+        st.session_state.csv_data = df  # Save CSV in session state
         st.markdown("### 📊 Raw Data Preview")
         st.dataframe(df)
 
@@ -177,39 +177,45 @@ elif page == "ℹ️ About":
     """)
 
 # ---------------- AI Assistance ----------------
-# ---------------- AI Assistance ----------------
 elif page == "🤖 AI Assistance":
     st.markdown("## 🤖 AI Assistance")
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=180)
 
-    # Initialize chat history
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
-
-    # User input
     user_input = st.text_area("💬 Ask me anything about this dashboard/data:")
 
     if st.button("Send"):
         if user_input.strip():
-            # Add user message
+            # Add user question to chat history
             st.session_state.chat_history.append({"role": "user", "content": user_input})
+
             try:
+                # Prepare system messages
+                system_messages = [{"role": "system", "content": "You are an AI assistant helping with dashboard insights."}]
+                
+                # Include full CSV data if uploaded
+                if st.session_state.csv_data is not None:
+                    df = st.session_state.csv_data
+                    data_summary = df.to_string(index=False)
+                    system_messages.append({
+                        "role": "system",
+                        "content": f"Use this dataset to answer any question:\n{data_summary}"
+                    })
+
                 # Call OpenAI API
-                response = client.chat.completions.create(
+                response = openai.chat.completions.create(
                     model="gpt-4o-mini",
-                    messages=[
-                        {"role": "system", "content": "You are an AI assistant helping with dashboard insights."}
-                    ] + st.session_state.chat_history
+                    messages=system_messages + st.session_state.chat_history
                 )
                 ai_answer = response.choices[0].message.content
-                # Add AI response
+
+                # Add AI response to chat
                 st.session_state.chat_history.append({"role": "assistant", "content": ai_answer})
             except Exception as e:
                 st.error(f"⚠️ API Error: {str(e)}")
         else:
             st.error("⚠️ Please enter a question.")
 
-    # Display chat with chat-bubble style
+    # Display chat bubbles
     for chat in st.session_state.chat_history:
         if chat["role"] == "user":
             st.markdown(f"""
@@ -237,7 +243,6 @@ elif page == "🤖 AI Assistance":
                 clear: both;
             '>{chat['content']}</div>
             """, unsafe_allow_html=True)
-
 
 # ---------------- Feedback ----------------
 elif page == "📝 Feedback":
