@@ -3,12 +3,6 @@ import pandas as pd
 import os
 from datetime import datetime
 import streamlit.components.v1 as components
-import openai
-
-# -----------------------------
-# Set OpenAI API key
-# -----------------------------
-openai.api_key = "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"
 
 # -----------------------------
 # Page Config
@@ -22,8 +16,6 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "page" not in st.session_state:
     st.session_state.page = "🔑 Login"
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
 if "csv_data" not in st.session_state:
     st.session_state.csv_data = None
 
@@ -75,8 +67,6 @@ if st.sidebar.button("📈 Insights", use_container_width=True):
     st.session_state.page = "📈 Insights"
 if st.sidebar.button("ℹ️ About", use_container_width=True):
     st.session_state.page = "ℹ️ About"
-if st.sidebar.button("🤖 AI Assistance", use_container_width=True):
-    st.session_state.page = "🤖 AI Assistance"
 if st.sidebar.button("📝 Feedback", use_container_width=True):
     st.session_state.page = "📝 Feedback"
 
@@ -166,91 +156,31 @@ elif page == "ℹ️ About":
     st.markdown("## ℹ️ About This Project")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_kyu7xb1v.json", height=220)
     st.markdown("""
-    This project provides **insights into global income inequality**  
-    using **Gini Index, data visualization, and interactive analysis**.
+    ### Project Overview
+    This project provides **insights into global income inequality** using data analysis, visualizations, and interactive dashboards.
 
-    ### 🎯 Objectives:
-    - Track and analyze **income distribution across countries**
-    - Provide **interactive dashboards** using Power BI
-    - Highlight regions with **extreme inequality**
-    - Gather **feedback for continuous improvement**
+    ### Objectives
+    - Analyze **income distribution across countries**.
+    - Highlight **countries with extreme inequality**.
+    - Provide **interactive dashboards** for exploration.
+    - Enable **data-driven decisions** and policy recommendations.
+
+    ### Data Sources
+    - Global Gini Index data.
+    - World Bank and UN datasets for population and income.
+    - Power BI dashboards for visual analysis.
+
+    ### Methodology
+    - Data cleaning and aggregation.
+    - Calculating metrics like **average Gini Index, highest and lowest values**.
+    - Visualizations using **line charts, bar charts, and interactive dashboards**.
+    - Feedback collection for continuous improvement.
+
+    ### Insights
+    - Some countries show consistently high inequality (e.g., South Africa).
+    - Others maintain low inequality (e.g., Slovenia).
+    - Tracking trends over years helps identify **improvements or declines**.
     """)
-
-# ---------------- AI Assistance ----------------
-elif page == "🤖 AI Assistance":
-    st.markdown("## 🤖 AI Assistance")
-    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=180)
-
-    user_input = st.text_area("💬 Ask me anything about this dashboard/data:")
-
-    if st.button("Send"):
-        if user_input.strip():
-            # Add user question to chat history
-            st.session_state.chat_history.append({"role": "user", "content": user_input})
-
-            try:
-                # Prepare system messages
-                system_messages = [{"role": "system", "content": "You are an AI assistant helping with dashboard insights."}]
-                
-                # Include CSV summary if uploaded
-                if st.session_state.csv_data is not None:
-                    df = st.session_state.csv_data
-
-                    # Select key columns to avoid huge input
-                    key_cols = df.columns.tolist()
-                    df_subset = df[key_cols]
-
-                    # Summary stats + top 10 rows
-                    summary_stats = df_subset.describe(include='all').to_string()
-                    top_rows = df_subset.head(10).to_string(index=False)
-
-                    system_messages.append({
-                        "role": "system",
-                        "content": f"Use this dataset summary and top rows to answer questions:\nSummary stats:\n{summary_stats}\n\nTop rows:\n{top_rows}"
-                    })
-
-                # Call OpenAI API
-                response = openai.chat.completions.create(
-                    model="gpt-4o-mini",
-                    messages=system_messages + st.session_state.chat_history
-                )
-                ai_answer = response.choices[0].message.content
-
-                # Add AI response to chat
-                st.session_state.chat_history.append({"role": "assistant", "content": ai_answer})
-            except Exception as e:
-                st.error(f"⚠️ API Error: {str(e)}")
-        else:
-            st.error("⚠️ Please enter a question.")
-
-    # Display chat bubbles
-    for chat in st.session_state.chat_history:
-        if chat["role"] == "user":
-            st.markdown(f"""
-            <div style='
-                background-color: #DCF8C6;
-                padding: 10px;
-                border-radius: 10px;
-                margin: 5px 0;
-                text-align: right;
-                max-width: 80%;
-                float: right;
-                clear: both;
-            '>{chat['content']}</div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-            <div style='
-                background-color: #F1F0F0;
-                padding: 10px;
-                border-radius: 10px;
-                margin: 5px 0;
-                text-align: left;
-                max-width: 80%;
-                float: left;
-                clear: both;
-            '>{chat['content']}</div>
-            """, unsafe_allow_html=True)
 
 # ---------------- Feedback ----------------
 elif page == "📝 Feedback":
