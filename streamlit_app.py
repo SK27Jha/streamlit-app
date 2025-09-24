@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from datetime import datetime
 import streamlit.components.v1 as components
+from openai import OpenAI
 
 # -----------------------------
 # Page Config
@@ -15,54 +16,75 @@ st.set_page_config(page_title="Global Income Inequality Dashboard", layout="wide
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "page" not in st.session_state:
-    st.session_state.page = "🔑 Login"
+    st.session_state.page = "Login"
 if "csv_data" not in st.session_state:
     st.session_state.csv_data = None
+
+page = st.session_state.page
 
 # -----------------------------
 # Function for embedding Lottie animations
 # -----------------------------
 def lottie_embed(url, height=250):
     components.html(f"""
-        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-        <lottie-player src="{url}" background="transparent" speed="1" style="height: {height}px; margin: auto;" loop autoplay></lottie-player>
-    """, height=height+50)
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <lottie-player 
+        src="{url}"  
+        background="transparent"  
+        speed="1"  
+        style="width:100%; height:{height}px; display:block; margin:auto;"  
+        loop  
+        autoplay>
+    </lottie-player>
+    """, height=height + 50)
+
 
 # -----------------------------
-# Styling
+# Global CSS Styling
 # -----------------------------
 st.markdown("""
 <style>
-/* Full-screen office + global finance background */
+/* Full-screen background */
 [data-testid="stAppViewContainer"] {
     background-image: url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1470&q=80');
     background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+    min-height: 100vh;
     color: white;
     position: relative;
+    overflow: hidden;
 }
 
-/* Overlay to enhance readability */
+/* Remove white header background */
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+/* Overlay for readability */
 [data-testid="stAppViewContainer"]::before {
     content: "";
     position: absolute;
-    top:0; left:0; width:100%; height:100%;
-    background-color: rgba(0,0,0,0.45);  /* dark overlay for clarity */
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.45);
     pointer-events: none;
+    z-index: 0;
 }
 
-/* Glassmorphism cards for all sections */
-.card, .stButton, .stTextInput, .stTextArea {
+/* Glassmorphism cards */
+.card, .stButton>button, .stTextInput, .stTextArea {
     background-color: rgba(255,255,255,0.85);
     color: black;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 1;
 }
 
-/* Metrics boxes styling */
+/* Metrics boxes */
 .stMetric {
     background-color: rgba(255,255,255,0.85) !important;
     color: black !important;
@@ -70,6 +92,8 @@ st.markdown("""
     padding: 15px !important;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+    position: relative;
+    z-index: 1;
 }
 
 /* Sidebar styling */
@@ -77,83 +101,70 @@ st.markdown("""
     background-color: rgba(0,0,0,0.7);
     color: white;
     backdrop-filter: blur(10px);
+    min-height: 100vh;
 }
 
 /* Sidebar buttons */
-.sidebar-btn-container button {
-    background-color: rgba(255,255,255,0.2) !important;
-    color: white !important;
-    border-radius: 10px;
+.stButton>button {
+    width: 100%;
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 12px;
     border: none;
-    padding: 8px 0;
-    font-size: 16px;
-    margin-bottom: 5px;
+    padding: 10px;
+    font-weight: bold;
+}
+.stButton>button:hover {
+    background-color: rgba(255,255,255,0.3);
 }
 </style>
 """, unsafe_allow_html=True)
 
-
-
-
 # -----------------------------
 # Sidebar Navigation
 # -----------------------------
-st.sidebar.title("Welcome 👍")
-st.sidebar.markdown('<div class="sidebar-btn-container">', unsafe_allow_html=True)
-
-if st.sidebar.button("🔑 Login", use_container_width=True):
-    st.session_state.page = "🔑 Login"
-if st.sidebar.button("📊 Dashboard", use_container_width=True):
-    st.session_state.page = "📊 Dashboard"
-if st.sidebar.button("📈 Insights", use_container_width=True):
-    st.session_state.page = "📈 Insights"
-if st.sidebar.button("ℹ️ About", use_container_width=True):
-    st.session_state.page = "ℹ️ About"
-if st.sidebar.button("📝 Feedback", use_container_width=True):
-    st.session_state.page = "📝 Feedback"
-
-st.sidebar.markdown('</div>', unsafe_allow_html=True)
+st.sidebar.title("Welcome👍")
+pages = ["Login", "Dashboard", "Insights", "About", "Feedback","AI Assistance"]
+for p in pages:
+    if st.sidebar.button(p, use_container_width=True):
+        st.session_state.page = p
+        page = p
 
 # -----------------------------
-# Page Rendering
+# Login Page
 # -----------------------------
-page = st.session_state.page
-
-# ---------------- Login Page ----------------
-if page == "🔑 Login":
-    st.markdown("## 🔑 Login Page")
+if page == "Login":
+    st.markdown("## Login Page")
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jcikwtux.json", height=200)
 
     if st.session_state.logged_in:
-        if st.button("🚪 Logout", key="logout_btn"):
+        if st.button("Logout"):
             st.session_state.logged_in = False
-            st.success("✅ Logged out successfully!")
+            st.success("Logged out successfully!")
             st.rerun()
-
-    if not st.session_state.logged_in:
-        username = st.text_input("Enter Username")
-        password = st.text_input("Enter Password", type="password")
+    else:
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
         if st.button("Login"):
             if username == "admin" and password == "1234":
                 st.session_state.logged_in = True
-                st.success("✅ Login Successful!")
+                st.success("Login Successful!")
                 st.rerun()
             else:
-                st.error("❌ Invalid Username or Password")
-    else:
-        st.success("✅ You are already logged in.")
+                st.error("Invalid Username or Password")
 
-# ---------------- Dashboard ----------------
-elif page == "📊 Dashboard":
-    st.markdown("## 📊 Dashboard Overview")
-
+# -----------------------------
+# Dashboard Page
+# -----------------------------
+elif page == "Dashboard":
+    st.markdown("## Dashboard Overview")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("🌎 Global Avg Gini Index", "38.5", "⬆️ 1.2%")
+        st.metric("Global Avg Gini Index", "38.5", "⬆️ 1.2%")
     with col2:
-        st.metric("📈 Highest Inequality", "South Africa", "+65.0 Gini")
+        st.metric("Highest Inequality", "South Africa", "+65.0 Gini")
     with col3:
-        st.metric("📉 Lowest Inequality", "Slovenia", "23.7 Gini")
+        st.metric("Lowest Inequality", "Slovenia", "23.7 Gini")
 
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=250)
 
@@ -161,40 +172,47 @@ elif page == "📊 Dashboard":
     st.markdown("""
         <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
         src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9"
-        frameborder="0" allowFullScreen="true"></iframe>
+        frameborder="0" allowFullScreen="true" style="position:relative; z-index:2;"></iframe>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ---------------- Insights ----------------
-elif page == "📈 Insights":
-    st.markdown("## 📈 Data Insights")
+# -----------------------------
+# Insights Page
+# -----------------------------
+elif page == "Insights":
+    st.markdown("## Data Insights")
     lottie_embed("https://assets1.lottiefiles.com/packages/lf20_jtbfg2nb.json", height=220)
 
-    uploaded_file = st.file_uploader("📂 Upload CSV file", type=["csv"])
-    if uploaded_file is not None:
+    uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
+    if uploaded_file:
         df = pd.read_csv(uploaded_file)
-        st.session_state.csv_data = df  # Save CSV in session state
-        st.markdown("### 📊 Raw Data Preview")
+        st.session_state.csv_data = df
+        st.markdown("### Raw Data Preview")
         st.dataframe(df)
 
         if "Country" in df.columns and "Gini Index" in df.columns:
-            st.markdown("### 📊 Country-wise Gini Index")
+            st.markdown("### Country-wise Gini Index")
             st.bar_chart(df.set_index("Country")["Gini Index"])
 
         if "Year" in df.columns:
-            st.markdown("### 📈 Gini Index Trend Over Years")
+            st.markdown("### Gini Index Trend Over Years")
             st.line_chart(df.groupby("Year")["Gini Index"].mean())
 
-        st.markdown("### 🔎 Quick Analysis")
-        st.write(f"✅ Number of countries: **{df['Country'].nunique()}**")
-        st.write(f"📈 Highest Gini Index: **{df['Gini Index'].max()}**")
-        st.write(f"📉 Lowest Gini Index: **{df['Gini Index'].min()}**")
-        st.write(f"🌍 Average Gini Index: **{round(df['Gini Index'].mean(),2)}**")
+        st.markdown("### Quick Analysis")
+        st.write(f"Number of countries: {df['Country'].nunique()}")
+        st.write(f"Highest Gini Index: {df['Gini Index'].max()}")
+        st.write(f"Lowest Gini Index: {df['Gini Index'].min()}")
+        st.write(f"Average Gini Index: {round(df['Gini Index'].mean(),2)}")
     else:
-        st.info("👆 Please upload a CSV file to see insights.")
+     st.markdown(
+    "<div style='color:white; font-weight:bold;'>Upload a CSV file to see insights.</div>",
+    unsafe_allow_html=True
+)
 
-# ---------------- About ----------------
-elif page == "ℹ️ About":
+# -----------------------------
+# About Page
+# -----------------------------
+elif page == "About":
     st.markdown("## ℹ️ About This Project")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_kyu7xb1v.json", height=220)
     st.markdown("""
@@ -224,10 +242,11 @@ elif page == "ℹ️ About":
     - Tracking trends over years helps identify **improvements or declines**.
     """)
 
-# ---------------- Feedback ----------------
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
     lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=220)
+
+    csv_file = os.path.join(os.getcwd(), "feedback.csv")  # absolute path
 
     with st.form("feedback_form", clear_on_submit=True):
         feedback = st.text_area("💬 Your feedback")
@@ -236,29 +255,19 @@ elif page == "📝 Feedback":
 
         if submitted:
             if feedback.strip():
-                feedback_data = {
+                df_new = pd.DataFrame({
                     "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
                     "Feedback": [feedback],
                     "Rating": [rating],
-                }
-                df_new = pd.DataFrame(feedback_data)
-
-                csv_file = "feedback.csv"
-
-                if os.path.exists(csv_file):
-                    df_existing = pd.read_csv(csv_file)
-                    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-                else:
-                    df_combined = df_new
-
-                df_combined.to_csv(csv_file, index=False)
+                })
+                df_new.to_csv(csv_file, mode='a', index=False, header=not os.path.exists(csv_file))
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
 
-    # Show Download button if feedback.csv exists
-    if os.path.exists("feedback.csv"):
-        with open("feedback.csv", "rb") as f:
+    # Download button outside form
+    if os.path.exists(csv_file):
+        with open(csv_file, "rb") as f:
             st.download_button(
                 label="⬇️ Download All Feedback (CSV)",
                 data=f,
