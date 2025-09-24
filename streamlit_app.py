@@ -244,33 +244,44 @@ elif page == "About":
 
 elif page == "📝 Feedback":
     st.markdown("## 📝 Feedback")
-    lottie_embed("https://assets9.lottiefiles.com/packages/lf20_fcfjwiyb.json", height=220)
-
-    csv_file = os.path.join(os.getcwd(), "feedback.csv")  # absolute path
 
     with st.form("feedback_form", clear_on_submit=True):
-        feedback = st.text_area("💬 Your feedback")
-        rating = st.slider("⭐ Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, 3)
+        feedback = st.text_area("Your feedback")
+        rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, 3)
         submitted = st.form_submit_button("Send Feedback")
 
         if submitted:
             if feedback.strip():
-                df_new = pd.DataFrame({
+                feedback_data = {
                     "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
                     "Feedback": [feedback],
                     "Rating": [rating],
-                })
-                df_new.to_csv(csv_file, mode='a', index=False, header=not os.path.exists(csv_file))
+                }
+                df_new = pd.DataFrame(feedback_data)
+
+                if os.path.exists("feedback.csv"):
+                    df_existing = pd.read_csv("feedback.csv")
+                    df = pd.concat([df_existing, df_new], ignore_index=True)
+                else:
+                    df = df_new
+
+                df.to_csv("feedback.csv", index=False)
                 st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
             else:
                 st.error("⚠️ Please enter feedback before submitting.")
 
-    # Download button outside form
-    if os.path.exists(csv_file):
-        with open(csv_file, "rb") as f:
-            st.download_button(
-                label="⬇️ Download All Feedback (CSV)",
-                data=f,
-                file_name="feedback.csv",
-                mime="text/csv"
-            )
+    if os.path.exists("feedback.csv"):
+        st.markdown("---")
+        st.subheader("📂 Previous Feedback")
+        df = pd.read_csv("feedback.csv")
+        st.markdown('<div class="feedback-table">', unsafe_allow_html=True)
+        st.dataframe(df, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        avg_rating = df["Rating"].mean()
+        st.metric("⭐ Average Rating", f"{avg_rating:.2f} / 5")
+
+        if st.button("🗑️ Erase All Feedback"):
+            os.remove("feedback.csv")
+            st.warning("⚠️ All feedback has been erased.")
+            st.rerun()
