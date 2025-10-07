@@ -1,3 +1,4 @@
+# app.py
 import streamlit as st
 import pandas as pd
 import os
@@ -124,7 +125,7 @@ st.markdown("""
 # Sidebar Navigation
 # -----------------------------
 st.sidebar.title("Welcome👍")
-pages = ["Login", "Dashboard", "Insights", "About", "Feedback","AI Assistance"]
+pages = ["Login", "Dashboard", "Insights", "About","AI Assistance", "Feedback",]
 for p in pages:
     if st.sidebar.button(p, use_container_width=True):
         st.session_state.page = p
@@ -169,10 +170,7 @@ elif page == "Dashboard":
     lottie_embed("https://assets2.lottiefiles.com/packages/lf20_qp1q7mct.json", height=250)
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown("""
-        <iframe title="Global Income Inequality Dashboard" width="100%" height="650"
-        src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9"
-        frameborder="0" allowFullScreen="true" style="position:relative; z-index:2;"></iframe>
+    st.markdown("""<iframe title="Global Income Inequality Dahboard" width="100%" height="650" src="https://app.powerbi.com/view?r=eyJrIjoiYjM4NjU1MGItYzM2Yi00YjAxLWIzYTYtNjgyMWRkMTNiNDhkIiwidCI6IjZmNzAzYzQwLWE4MTEtNDUwYS1iZmFmLWNmM2QxZTczM2RhZiJ9" frameborder="0" allowFullScreen="true"></iframe>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -202,12 +200,14 @@ elif page == "Insights":
         st.write(f"Number of countries: {df['Country'].nunique()}")
         st.write(f"Highest Gini Index: {df['Gini Index'].max()}")
         st.write(f"Lowest Gini Index: {df['Gini Index'].min()}")
-        st.write(f"Average Gini Index: {round(df['Gini Index'].mean(),2)}")
+        st.write(f"Average Gini Index: {round(df['Gini Index'].mean(), 2)}")
+
     else:
-     st.markdown(
-    "<div style='color:white; font-weight:bold;'>Upload a CSV file to see insights.</div>",
-    unsafe_allow_html=True
-)
+        st.markdown(
+            "<div style='color:white; font-weight:bold;'>Upload a CSV file to see insights.</div>",
+            unsafe_allow_html=True
+        )
+
 
 # -----------------------------
 # About Page
@@ -242,46 +242,92 @@ elif page == "About":
     - Tracking trends over years helps identify **improvements or declines**.
     """)
 
-elif page == "📝 Feedback":
+elif page == "Feedback":
+    # Lottie animation (iframe/embed style)
+    lottie_embed("https://assets2.lottiefiles.com/packages/lf20_jbrw3hcz.json", height=220)
+
     st.markdown("## 📝 Feedback")
 
-    with st.form("feedback_form", clear_on_submit=True):
-        feedback = st.text_area("Your feedback")
-        rating = st.slider("Rate this Dashboard (1 = Poor, 5 = Excellent)", 1, 5, 3)
-        submitted = st.form_submit_button("Send Feedback")
+    # --- Feedback Input ---
+    feedback = st.text_area("💬 Your feedback")
+    rating = st.slider("⭐ Rate this Dashboard", 1, 5, 3)
 
-        if submitted:
-            if feedback.strip():
-                feedback_data = {
-                    "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
-                    "Feedback": [feedback],
-                    "Rating": [rating],
-                }
-                df_new = pd.DataFrame(feedback_data)
+    if st.button("Send Feedback"):
+        if feedback.strip():
+            feedback_data = {
+                "Timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+                "Feedback": [feedback],
+                "Rating": [rating],
+            }
+            df_new = pd.DataFrame(feedback_data)
 
-                if os.path.exists("feedback.csv"):
-                    df_existing = pd.read_csv("feedback.csv")
-                    df = pd.concat([df_existing, df_new], ignore_index=True)
-                else:
-                    df = df_new
-
-                df.to_csv("feedback.csv", index=False)
-                st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
+            if os.path.exists("feedback.csv"):
+                df_existing = pd.read_csv("feedback.csv")
+                df = pd.concat([df_existing, df_new], ignore_index=True)
             else:
-                st.error("⚠️ Please enter feedback before submitting.")
+                df = df_new
 
+            df.to_csv("feedback.csv", index=False)
+            st.success(f"✅ Thank you! Feedback saved with rating {rating}/5")
+        else:
+            st.error("⚠️ Please enter feedback before submitting.")
+
+    # --- Show Previous Feedback ---
     if os.path.exists("feedback.csv"):
-        st.markdown("---")
-        st.subheader("📂 Previous Feedback")
         df = pd.read_csv("feedback.csv")
-        st.markdown('<div class="feedback-table">', unsafe_allow_html=True)
-        st.dataframe(df, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        if not df.empty:
+            st.markdown("---")
+            st.subheader("📂 Previous Feedback")
+            st.dataframe(df, use_container_width=True)
+            st.metric("⭐ Average Rating", f"{df['Rating'].mean():.2f} / 5")
 
-        avg_rating = df["Rating"].mean()
-        st.metric("⭐ Average Rating", f"{avg_rating:.2f} / 5")
+            # Download button
+            csv_data = df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="⬇️ Download Feedback CSV",
+                data=csv_data,
+                file_name="feedback.csv",
+                mime="text/csv"
+            )
 
-        if st.button("🗑️ Erase All Feedback"):
-            os.remove("feedback.csv")
-            st.warning("⚠️ All feedback has been erased.")
-            st.rerun()
+            # Erase button
+            if st.button("🗑️ Erase All Feedback"):
+                os.remove("feedback.csv")
+                st.warning("⚠️ All feedback has been erased.")
+                st.experimental_rerun()
+
+
+        # ---------------- AI Assistance Page ----------------
+elif page == "AI Assistance":
+    st.markdown("##  AI Assistance")
+
+    lottie_embed("https://assets10.lottiefiles.com/packages/lf20_0yfsb3a1.json")
+
+    # Bold white info text
+    st.markdown(
+        "<p style='color:white; font-weight:bold; font-size:16px;'>💡 Ask AI anything related to <b>income inequality, data insights, or this dashboard</b>.</p>",
+        unsafe_allow_html=True
+    )
+
+    user_query = st.text_input("📝 Enter your question here:")
+
+
+    if st.button("Ask AI"):
+        if user_query.strip():
+            try:
+                chat = openai.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are an expert data analyst and explain concepts clearly."},
+                        {"role": "user", "content": user_query}
+                    ],
+                    temperature=0.7,
+                    max_tokens=300
+                )
+                answer = chat.choices[0].message.content
+                st.markdown(f"<p style='color:white; font-weight:bold'>{answer}</p>", unsafe_allow_html=True)
+            except Exception as e:
+                st.error(f"❌ Error: {e}")
+        else:
+            st.warning("⚠️ Please enter a question before clicking Ask AI.")
+
