@@ -1,3 +1,0 @@
-streamlit-lottie
-requests
-openai
